@@ -1,0 +1,394 @@
+﻿<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Importar datos iniciales</title>
+<style>body{font:15px system-ui;max-width:640px;margin:40px auto;padding:0 16px}pre{background:#eee;padding:12px;white-space:pre-wrap}</style></head><body>
+<h1>Importar datos iniciales a Firestore</h1>
+<p>Carga las asignaciones actuales del tablero (44 obras) en tu proyecto de Firebase. Ejecutalo <b>una sola vez</b> y despu&eacute;s pod&eacute;s borrar este archivo.</p>
+<button id="go">Importar</button><pre id="log"></pre>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script>
+const SEED = {
+    "asignaciones":  {
+                         "campus-aa-decks":  {
+                                                 "envergadura":  "Pequeña",
+                                                 "estado":  "Proyecto / Planificación",
+                                                 "lleva":  "Oficina Técnica",
+                                                 "prioridad":  "Alta",
+                                                 "responsable":  "Vicky",
+                                                 "sehace":  ""
+                                             },
+                         "campus-bacheo-biblioteca":  {
+                                                          "borrada":  false,
+                                                          "envergadura":  "Pequeña",
+                                                          "estado":  "Pendiente",
+                                                          "lleva":  "Oficina Técnica",
+                                                          "nombre":  "",
+                                                          "plan":  [
+
+                                                                   ],
+                                                          "prioridad":  "Media",
+                                                          "responsable":  "Gabi y Vico",
+                                                          "sehace":  ""
+                                                      },
+                         "campus-banos-rectorado":  {
+                                                        "envergadura":  "Mediana",
+                                                        "estado":  "Pendiente",
+                                                        "lleva":  "Oficina Técnica",
+                                                        "prioridad":  "Media",
+                                                        "responsable":  "",
+                                                        "sehace":  ""
+                                                    },
+                         "campus-bombeo":  {
+                                               "envergadura":  "Mediana",
+                                               "estado":  "Proyecto / Planificación",
+                                               "lleva":  "Oficina Técnica",
+                                               "prioridad":  "Media",
+                                               "responsable":  "Gabi y Vico",
+                                               "sehace":  ""
+                                           },
+                         "campus-cano-agua":  {
+                                                  "envergadura":  "Pequeña",
+                                                  "estado":  "Pendiente",
+                                                  "lleva":  "Oficina Técnica",
+                                                  "prioridad":  "Media",
+                                                  "responsable":  "Gabi y Vico",
+                                                  "sehace":  ""
+                                              },
+                         "campus-capilla":  {
+                                                "envergadura":  "Grande",
+                                                "estado":  "Proyecto / Planificación",
+                                                "lleva":  "Carballo e Imwinkelried",
+                                                "prioridad":  "Alta",
+                                                "responsable":  "Gabi y Vico",
+                                                "sehace":  ""
+                                            },
+                         "campus-carteleria-georgia":  {
+                                                           "envergadura":  "Mediana",
+                                                           "estado":  "Proyecto / Planificación",
+                                                           "lleva":  "Oficina Técnica",
+                                                           "prioridad":  "Media",
+                                                           "responsable":  "Gabi y Vico",
+                                                           "sehace":  ""
+                                                       },
+                         "campus-ceniceros":  {
+                                                  "envergadura":  "Pequeña",
+                                                  "estado":  "En stand by",
+                                                  "lleva":  "Oficina Técnica",
+                                                  "prioridad":  "Baja",
+                                                  "responsable":  "Vicky",
+                                                  "sehace":  ""
+                                              },
+                         "campus-cerramientos-biblio":  {
+                                                            "envergadura":  "Pequeña",
+                                                            "estado":  "Ejecución",
+                                                            "lleva":  "Oficina Técnica",
+                                                            "prioridad":  "Media",
+                                                            "responsable":  "Agus",
+                                                            "sehace":  ""
+                                                        },
+                         "campus-circunvalacion":  {
+                                                       "borrada":  false,
+                                                       "envergadura":  "Grande",
+                                                       "estado":  "Proyecto / Planificación",
+                                                       "lleva":  "Zap",
+                                                       "nombre":  "",
+                                                       "plan":  [
+
+                                                                ],
+                                                       "prioridad":  "Media",
+                                                       "responsable":  "Oficina Técnica",
+                                                       "sehace":  ""
+                                                   },
+                         "campus-computo":  {
+                                                "envergadura":  "Mediana",
+                                                "estado":  "Proyecto / Planificación",
+                                                "lleva":  "Depro",
+                                                "prioridad":  "Alta",
+                                                "responsable":  "Vicky",
+                                                "sehace":  ""
+                                            },
+                         "campus-cowork-vulcano":  {
+                                                       "envergadura":  "Pequeña",
+                                                       "estado":  "Pendiente",
+                                                       "lleva":  "Oficina Técnica",
+                                                       "prioridad":  "Baja",
+                                                       "responsable":  "",
+                                                       "sehace":  ""
+                                                   },
+                         "campus-droguero":  {
+                                                 "envergadura":  "Mediana",
+                                                 "estado":  "Proyecto / Planificación",
+                                                 "lleva":  "Oficina Técnica",
+                                                 "prioridad":  "Media",
+                                                 "responsable":  "Vico",
+                                                 "sehace":  ""
+                                             },
+                         "campus-escaneo-fachadas":  {
+                                                         "envergadura":  "Pequeña",
+                                                         "estado":  "En stand by",
+                                                         "lleva":  "Depro",
+                                                         "prioridad":  "Baja",
+                                                         "responsable":  "",
+                                                         "sehace":  ""
+                                                     },
+                         "campus-ilum-veterinario":  {
+                                                         "envergadura":  "Pequeña",
+                                                         "estado":  "Pendiente",
+                                                         "lleva":  "Mantenimiento",
+                                                         "prioridad":  "Baja",
+                                                         "responsable":  "Andrea Balian",
+                                                         "sehace":  ""
+                                                     },
+                         "campus-jaluf":  {
+                                              "envergadura":  "Pequeña",
+                                              "estado":  "Pendiente",
+                                              "lleva":  "Oficina Técnica",
+                                              "prioridad":  "Baja",
+                                              "responsable":  "",
+                                              "sehace":  ""
+                                          },
+                         "campus-juntas-calle-nueva":  {
+                                                           "envergadura":  "Mediana",
+                                                           "estado":  "Pendiente",
+                                                           "lleva":  "Oficina Técnica",
+                                                           "prioridad":  "Baja",
+                                                           "responsable":  "Gabi",
+                                                           "sehace":  ""
+                                                       },
+                         "campus-juntas-ingenieria":  {
+                                                          "envergadura":  "Mediana",
+                                                          "estado":  "Pendiente",
+                                                          "lleva":  "Oficina Técnica",
+                                                          "prioridad":  "Baja",
+                                                          "responsable":  "Gabi",
+                                                          "sehace":  ""
+                                                      },
+                         "campus-lab-aguas":  {
+                                                  "envergadura":  "Mediana",
+                                                  "estado":  "Suspendida",
+                                                  "lleva":  "Oficina Técnica",
+                                                  "responsable":  "",
+                                                  "sehace":  ""
+                                              },
+                         "campus-lab-microscopios":  {
+                                                         "envergadura":  "Mediana",
+                                                         "estado":  "Pendiente",
+                                                         "lleva":  "Oficina Técnica",
+                                                         "prioridad":  "Media",
+                                                         "responsable":  "",
+                                                         "sehace":  ""
+                                                     },
+                         "campus-lonas-agro":  {
+                                                   "envergadura":  "Pequeña",
+                                                   "estado":  "Pendiente",
+                                                   "lleva":  "Oficina Técnica",
+                                                   "prioridad":  "Baja",
+                                                   "responsable":  "",
+                                                   "sehace":  ""
+                                               },
+                         "campus-pintura-vial":  {
+                                                     "envergadura":  "Pequeña",
+                                                     "estado":  "Suspendida",
+                                                     "lleva":  "Oficina Técnica",
+                                                     "prioridad":  "",
+                                                     "responsable":  "Gabi y Vico",
+                                                     "sehace":  ""
+                                                 },
+                         "campus-piso-vre":  {
+                                                 "envergadura":  "Pequeña",
+                                                 "estado":  "Programada",
+                                                 "lleva":  "Oficina Técnica",
+                                                 "prioridad":  "Baja",
+                                                 "responsable":  "Fla",
+                                                 "sehace":  ""
+                                             },
+                         "campus-playa-sibus":  {
+                                                    "envergadura":  "Grande",
+                                                    "estado":  "Proyecto / Planificación",
+                                                    "lleva":  "Oficina Técnica",
+                                                    "prioridad":  "Alta",
+                                                    "responsable":  "Gabi y Vico",
+                                                    "sehace":  ""
+                                                },
+                         "campus-porton-georgia":  {
+                                                       "envergadura":  "Pequeña",
+                                                       "estado":  "Proyecto / Planificación",
+                                                       "lleva":  "Oficina Técnica",
+                                                       "prioridad":  "Media",
+                                                       "responsable":  "Gabi y Vico",
+                                                       "sehace":  ""
+                                                   },
+                         "campus-secretaria-salud":  {
+                                                         "envergadura":  "Pequeña",
+                                                         "estado":  "Suspendida",
+                                                         "lleva":  "Oficina Técnica",
+                                                         "prioridad":  "",
+                                                         "responsable":  "",
+                                                         "sehace":  ""
+                                                     },
+                         "campus-streaming":  {
+                                                  "envergadura":  "Pequeña",
+                                                  "estado":  "Proyecto / Planificación",
+                                                  "lleva":  "Depro",
+                                                  "prioridad":  "Alta",
+                                                  "responsable":  "Vicky",
+                                                  "sehace":  ""
+                                              },
+                         "campus-subestaciones":  {
+                                                      "envergadura":  "Pequeña",
+                                                      "estado":  "Pendiente",
+                                                      "lleva":  "Oficina Técnica",
+                                                      "prioridad":  "Baja",
+                                                      "responsable":  "",
+                                                      "sehace":  ""
+                                                  },
+                         "campus-tapas-camaras":  {
+                                                      "envergadura":  "Mediana",
+                                                      "estado":  "Pendiente",
+                                                      "lleva":  "Oficina Técnica",
+                                                      "prioridad":  "Baja",
+                                                      "responsable":  "Gabi",
+                                                      "sehace":  ""
+                                                  },
+                         "centro-anfiteatro":  {
+                                                   "envergadura":  "Pequeña",
+                                                   "estado":  "Ejecución",
+                                                   "lleva":  "Oficina Técnica",
+                                                   "prioridad":  "Media",
+                                                   "responsable":  "Andre",
+                                                   "sehace":  ""
+                                               },
+                         "centro-coffee-break":  {
+                                                     "envergadura":  "Mediana",
+                                                     "estado":  "Pendiente",
+                                                     "lleva":  "Oficina Técnica",
+                                                     "prioridad":  "Media",
+                                                     "responsable":  "Fla",
+                                                     "sehace":  ""
+                                                 },
+                         "centro-cowork-posgrado":  {
+                                                        "envergadura":  "Mediana",
+                                                        "estado":  "Suspendida",
+                                                        "lleva":  "Oficina Técnica",
+                                                        "responsable":  "",
+                                                        "sehace":  ""
+                                                    },
+                         "centro-insonorizacion":  {
+                                                       "envergadura":  "Pequeña",
+                                                       "estado":  "Pendiente",
+                                                       "lleva":  "Oficina Técnica",
+                                                       "prioridad":  "Media",
+                                                       "responsable":  "",
+                                                       "sehace":  ""
+                                                   },
+                         "cu-aula14":  {
+                                           "envergadura":  "Mediana",
+                                           "estado":  "Pendiente",
+                                           "lleva":  "Oficina Técnica",
+                                           "prioridad":  "Media",
+                                           "responsable":  "Fla",
+                                           "sehace":  ""
+                                       },
+                         "cu-cocina-secretaria":  {
+                                                      "envergadura":  "Pequeña",
+                                                      "estado":  "Pendiente",
+                                                      "lleva":  "Mantenimiento",
+                                                      "prioridad":  "Media",
+                                                      "responsable":  "Andre",
+                                                      "sehace":  ""
+                                                  },
+                         "cu-patio":  {
+                                          "borrada":  false,
+                                          "envergadura":  "Grande",
+                                          "estado":  "Proyecto / Planificación",
+                                          "lleva":  "Oficina Técnica",
+                                          "nombre":  "",
+                                          "plan":  [
+
+                                                   ],
+                                          "prioridad":  "Media",
+                                          "responsable":  "Fla",
+                                          "sehace":  ""
+                                      },
+                         "cu-sala-profes":  {
+                                                "envergadura":  "Mediana",
+                                                "estado":  "Pendiente",
+                                                "lleva":  "Oficina Técnica",
+                                                "prioridad":  "Media",
+                                                "responsable":  "Fla",
+                                                "sehace":  ""
+                                            },
+                         "cu-shining":  {
+                                            "envergadura":  "Pequeña",
+                                            "estado":  "Ejecución",
+                                            "lleva":  "Oficina Técnica",
+                                            "prioridad":  "Alta",
+                                            "responsable":  "Agus",
+                                            "sehace":  ""
+                                        },
+                         "rc-contenedor":  {
+                                               "envergadura":  "Mediana",
+                                               "estado":  "Presupuestación / Adjudicación",
+                                               "lleva":  "Oficina Técnica",
+                                               "prioridad":  "Media",
+                                               "responsable":  "Agus",
+                                               "sehace":  ""
+                                           },
+                         "rc-deck-bar":  {
+                                             "envergadura":  "Grande",
+                                             "estado":  "Proyecto / Planificación",
+                                             "lleva":  "Antula",
+                                             "prioridad":  "Alta",
+                                             "responsable":  "Agus",
+                                             "sehace":  ""
+                                         },
+                         "rc-divisorios-sum":  {
+                                                   "envergadura":  "Mediana",
+                                                   "estado":  "Ejecución",
+                                                   "lleva":  "Oficina Técnica",
+                                                   "prioridad":  "Media",
+                                                   "responsable":  "Agus",
+                                                   "sehace":  ""
+                                               },
+                         "rc-estacionamientos":  {
+                                                     "envergadura":  "Mediana",
+                                                     "estado":  "Suspendida",
+                                                     "lleva":  "",
+                                                     "responsable":  "",
+                                                     "sehace":  ""
+                                                 },
+                         "rc-karson":  {
+                                           "envergadura":  "Pequeña",
+                                           "estado":  "Pendiente",
+                                           "lleva":  "Oficina Técnica",
+                                           "prioridad":  "Baja",
+                                           "responsable":  "",
+                                           "sehace":  ""
+                                       },
+                         "rc-totem":  {
+                                          "envergadura":  "Mediana",
+                                          "estado":  "Ejecución",
+                                          "lleva":  "Oficina Técnica",
+                                          "prioridad":  "Media",
+                                          "responsable":  "Agus",
+                                          "sehace":  ""
+                                      }
+                     }
+}
+;
+const log = t => document.getElementById("log").textContent += t + "\n";
+document.getElementById("go").onclick = async () => {
+  try {
+    if (!window.FIREBASE_CONFIG || FIREBASE_CONFIG.apiKey === "REEMPLAZAR") return log("Primero completa firebase-config.js");
+    firebase.initializeApp(FIREBASE_CONFIG);
+    await firebase.auth().signInAnonymously();
+    const db = firebase.firestore();
+    for (const [id, data] of Object.entries(SEED.asignaciones)) {
+      await db.doc("asignaciones/" + id).set(data);
+      log("OK " + id);
+    }
+    log("Listo: " + Object.keys(SEED.asignaciones).length + " asignaciones importadas.");
+  } catch (e) { log("Error: " + e.message); }
+};
+</script></body></html>
