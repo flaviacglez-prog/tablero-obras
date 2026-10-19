@@ -1,4 +1,4 @@
-# Instrucciones para Claude (leer siempre antes de trabajar)
+﻿# Instrucciones para Claude (leer siempre antes de trabajar)
 
 ## Quién te habla
 Las personas que usan este proyecto **no saben programar**. Saben qué producto quieren, no cómo se hace.
@@ -9,8 +9,8 @@ Las personas que usan este proyecto **no saben programar**. Saben qué producto 
 
 ## Qué es este proyecto
 **Tablero de obras** de la Oficina Técnica (Departamento de Infraestructura Edilicia, UCC). Es una página web que muestra y permite editar las obras por sede: responsable, prioridad, etapa, quién la lleva, envergadura, planificación en calendario y comentarios.
-- Sitio publicado: https://flaviacglez-prog.github.io/tablero-obras/
-- Repositorio: https://github.com/flaviacglez-prog/tablero-obras (público)
+- Sitio publicado: https://ucc-oficinatecnica.github.io/tablero-obras/
+- Repositorio: https://github.com/ucc-oficinatecnica/tablero-obras (público)
 - Se publica **solo** cuando se suben cambios a la rama `main`.
 
 ## Cómo está armado (para vos, no para ellos)
@@ -23,7 +23,7 @@ Las personas que usan este proyecto **no saben programar**. Saben qué producto 
 
 ## Cómo trabajar (hacelo vos, sin pedirles que lo hagan)
 1. **Antes de tocar nada, traé los últimos cambios** del repositorio (`git pull`). Varias personas editan el mismo proyecto.
-2. Si la carpeta todavía no tiene el proyecto, descargalo (`git clone https://github.com/flaviacglez-prog/tablero-obras.git`). Si falta Git o el acceso a GitHub, guialos paso a paso.
+2. Si la carpeta todavía no tiene el proyecto, descargalo (`git clone https://github.com/ucc-oficinatecnica/tablero-obras.git`). Si falta Git o el acceso a GitHub, guialos paso a paso.
 3. Hacé el cambio pedido. Mantené el estilo y el diseño existentes salvo que pidan cambiarlos. La página debe verse bien en celular y en computadora, en modo claro y oscuro.
 4. **Probá que la página abra sin errores** antes de publicar.
 5. **Antes de publicar, mostrales qué cambió y preguntales: "¿Lo publico?".** Publicar es subir los cambios (`git commit` + `git push`) y todos lo ven en el sitio en un minuto. No publiques sin su sí.

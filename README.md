@@ -1,13 +1,13 @@
-# Tablero de obras – Oficina Técnica
+﻿# Tablero de obras – Oficina Técnica
 
-Página: https://flaviacglez-prog.github.io/tablero-obras/
+Página: https://ucc-oficinatecnica.github.io/tablero-obras/
 
 ## Cómo empezar a trabajar (para quien no programa)
 
 1. Instalá **Claude Code** y abrilo en una carpeta vacía de tu computadora.
 2. Pegale este mensaje:
 
-   > Descargá el proyecto https://github.com/flaviacglez-prog/tablero-obras.git, leé el archivo CLAUDE.md y trabajá según esas instrucciones. Yo no sé de código: explicame todo simple. Primero ayudame a dejar todo listo para poder editar y publicar.
+   > Descargá el proyecto https://github.com/ucc-oficinatecnica/tablero-obras.git, leé el archivo CLAUDE.md y trabajá según esas instrucciones. Yo no sé de código: explicame todo simple. Primero ayudame a dejar todo listo para poder editar y publicar.
 
 3. Después pedile los cambios que quieras, contándole **qué querés ver**, por ejemplo:
    - "Agregá una sección de presupuestos arriba de la lista."
