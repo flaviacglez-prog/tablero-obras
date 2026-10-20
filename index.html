@@ -256,16 +256,29 @@ main{padding-block:10px 60px;display:grid;gap:18px}
 #fPlazo,#plazosBtn,#planTop,#sortPr{display:none!important}
 #cover{position:fixed;inset:0;z-index:999;display:grid;place-items:center;align-content:center;gap:14px;background:var(--bg);color:var(--muted);font:600 13px var(--f-body);text-align:center;padding:16px}
 #cover img{height:44px;opacity:.55}
-#gate{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:16px;background:var(--bg)}
-.gate-box{width:min(380px,100%);background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:28px 24px;display:grid;gap:12px;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.12)}
-.gate-logo{height:44px;margin:0 auto}
-.gate-box h1{margin:0;font:800 18px var(--f-display);color:var(--fg)}
-.gate-box p{margin:0;font-size:13px;color:var(--muted)}
-.gate-box input{font:700 20px var(--f-display);letter-spacing:.3em;text-align:center;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--fg)}
-.gate-box input:focus{outline:2px solid var(--accent);outline-offset:1px}
-.gate-box button{font:700 14px var(--f-body);padding:11px 14px;border:0;border-radius:10px;background:var(--accent);color:var(--surface);cursor:pointer}
-.gate-box button:disabled{opacity:.6;cursor:wait}
-.gate-err{min-height:16px;font-size:12px;font-weight:600;color:var(--martin)}
+#gate{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:24px;overflow:auto;background:#d9e7f8}
+.gate-bg{position:absolute;inset:0;overflow:hidden}
+.gate-bg::before{content:"";position:absolute;inset:-4%;background:url(fondo-acceso.jpg) 8% 78%/auto 150% no-repeat;filter:blur(6px) saturate(.8)}
+.gate-bg::after{content:"";position:absolute;inset:0;background:radial-gradient(90% 70% at 12% 0%,rgba(255,255,255,.5),transparent 62%),radial-gradient(70% 60% at 100% 100%,rgba(255,255,255,.35),transparent 60%),linear-gradient(180deg,rgba(222,236,252,.62),rgba(196,216,242,.5))}
+.gate-box{position:relative;z-index:2;width:clamp(290px,50vw,780px);box-sizing:border-box;background:linear-gradient(155deg,rgba(255,255,255,.78),rgba(240,246,255,.5));-webkit-backdrop-filter:blur(22px) saturate(1.25);backdrop-filter:blur(22px) saturate(1.25);border:1.5px solid rgba(255,255,255,.85);border-radius:clamp(22px,3.4vw,44px);padding:clamp(20px,6vh,64px) clamp(18px,6.4vw,100px) clamp(22px,6vh,66px);display:grid;gap:clamp(10px,2.2vh,22px);text-align:center;box-shadow:0 24px 70px rgba(30,70,130,.22),inset 0 1px 0 rgba(255,255,255,.9)}
+.gate-logo{display:block;height:clamp(46px,10vh,104px);margin:0 auto}
+.gate-box::before{content:"";width:clamp(40px,6vw,96px);height:4px;background:#74b4ee;border-radius:3px;margin:clamp(6px,2.6vh,26px) auto 0;order:2}
+.gate-box h1{margin:0;font:800 clamp(17px,3.1vw,42px) var(--f-display);color:#002c55;order:3;letter-spacing:.01em}
+.gate-box p{margin:0;font-size:clamp(11px,1.65vw,23px);color:#4a6384;order:4}
+.gate-fld{position:relative;order:5;margin-top:clamp(2px,1.6vh,16px)}
+.gate-box input{width:100%;box-sizing:border-box;font:700 clamp(16px,2.4vw,30px) var(--f-display);letter-spacing:.4em;text-align:center;padding:clamp(11px,3vh,32px) 52px;min-width:0;border:1.5px solid rgba(255,255,255,.9);border-radius:clamp(14px,2vw,28px);background:rgba(255,255,255,.62);color:#002c55;box-shadow:0 6px 20px rgba(60,100,160,.12),inset 0 1px 0 rgba(255,255,255,.9)}
+.gate-box input::placeholder{letter-spacing:.2em;color:#7e92ad;font-weight:600}
+.gate-box input:focus{outline:2px solid #3a82d0;outline-offset:2px}
+.gate-lock{position:absolute;left:clamp(14px,2.4vw,30px);top:50%;transform:translateY(-50%);width:clamp(16px,2vw,26px);height:clamp(16px,2vw,26px);color:#6d83a3;pointer-events:none}
+.gate-eye{position:absolute;right:clamp(8px,1.6vw,20px);top:50%;transform:translateY(-50%);width:clamp(28px,3.4vw,42px);height:clamp(28px,3.4vw,42px);display:grid;place-items:center;border:0;border-radius:10px;background:none;color:#6d83a3;cursor:pointer;padding:0}
+.gate-eye:hover{background:rgba(0,44,85,.08);color:#002c55}
+.gate-eye svg{width:clamp(17px,2vw,24px);height:clamp(17px,2vw,24px)}
+.gate-err{order:6;min-height:16px;font-size:clamp(11px,1.2vw,14px);font-weight:600;color:var(--martin)}
+.gate-box button[type="submit"]{order:7;position:relative;font:700 clamp(14px,2.3vw,30px) var(--f-body);padding:clamp(11px,3vh,32px) 56px;border:1px solid rgba(255,255,255,.35);border-radius:clamp(14px,2vw,28px);background:linear-gradient(180deg,#1d4f86,#0a3466);color:#fff;cursor:pointer;display:block;text-align:center;box-shadow:0 12px 26px rgba(8,45,95,.35),inset 0 1px 0 rgba(255,255,255,.25)}
+.gate-box button[type="submit"] i{position:absolute;right:clamp(14px,2.6vw,34px);top:50%;transform:translateY(-50%);font-style:normal;display:grid}
+.gate-box button[type="submit"] i svg{width:clamp(18px,2.6vw,34px);height:clamp(18px,2.6vw,34px)}
+.gate-box button[type="submit"]:disabled{opacity:.6;cursor:wait}
+@media(max-width:560px){.gate-box{width:min(380px,100%)}}
 .sortbtn{font:600 11.5px var(--f-body);color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:7px 10px;cursor:pointer}
 .sortbtn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
 .sd{flex:none;font-size:10px;font-weight:600;color:var(--muted);background:var(--surface-2);border-radius:4px;padding:1px 6px}
@@ -1358,9 +1371,10 @@ renderAll();
   const probe=async()=>{try{await db.collection("asignaciones").doc("config-plazos").get(); return true;}catch(e){return !(e&&e.code==="permission-denied");}};
   const pedirCodigo=()=>new Promise(resolve=>{
     const ov=document.createElement("div"); ov.id="gate"; ov.setAttribute("role","dialog"); ov.setAttribute("aria-modal","true"); ov.setAttribute("aria-label","Código de acceso");
-    ov.innerHTML=`<form class="gate-box"><img src="logo-ucc.svg" alt="UCC" class="gate-logo"><h1>Tablero de obras</h1><p>Ingresá el código de acceso que te dieron.</p><input id="gate-code" type="password" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="Código" aria-label="Código de acceso"><div class="gate-err" id="gate-err" role="alert"></div><button type="submit">Entrar</button></form>`;
+    ov.innerHTML=`<div class="gate-bg" aria-hidden="true"></div><form class="gate-box"><img src="logo-ucc.svg" alt="UCC" class="gate-logo"><h1>TABLERO DE OBRAS</h1><p>Ingresá el código de acceso que te dieron.</p><div class="gate-fld"><svg class="gate-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/><circle cx="12" cy="16" r=".8" fill="currentColor"/></svg><input id="gate-code" type="password" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="Código" aria-label="Código de acceso"><button type="button" class="gate-eye" aria-label="Mostrar el código" title="Mostrar el código"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div><div class="gate-err" id="gate-err" role="alert"></div><button type="submit">Entrar<i aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"/></svg></i></button></form>`;
     document.body.appendChild(ov);
     const fm=ov.querySelector("form"), inp=ov.querySelector("#gate-code"), er=ov.querySelector("#gate-err"); inp.focus();
+    const ojo=ov.querySelector(".gate-eye"); ojo.addEventListener("click",()=>{const ver=inp.type==="password"; inp.type=ver?"text":"password"; ojo.setAttribute("aria-label",ver?"Ocultar el código":"Mostrar el código"); ojo.title=ojo.getAttribute("aria-label"); inp.focus();});
     fm.addEventListener("submit",async ev=>{ev.preventDefault(); const c=inp.value.trim(); if(!c){er.textContent="Escribí el código."; return;}
       er.textContent=""; const bt=fm.querySelector("button"); bt.disabled=true;
       try{await db.collection("miembros").doc(myId).set({codigo:c}); if(await probe()){ov.remove(); resolve(true); return;}}catch(ex){}
