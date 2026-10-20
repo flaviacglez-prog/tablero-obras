@@ -1,4 +1,4 @@
-﻿# Instrucciones para Claude (leer siempre antes de trabajar)
+# Instrucciones para Claude (leer siempre antes de trabajar)
 
 ## Quién te habla
 Las personas que usan este proyecto **no saben programar**. Saben qué producto quieren, no cómo se hace.
@@ -40,3 +40,33 @@ Las personas que usan este proyecto **no saben programar**. Saben qué producto 
 
 ## Si piden algo grande
 Para cambios grandes (rediseñar, reorganizar), avisales que conviene avisarle a los demás que están editando para no pisarse, y sugerí hacerlo por partes.
+
+## Seguimiento de etapas (tiempo por etapa de cada obra)
+- Al cambiar la etapa de una obra, la página registra sola la fecha y guarda el historial. No hay que cargar nada dos veces: el calendario de planificación se dibuja a partir de ese historial.
+- Datos: cada obra (documento de `asignaciones/<id>` en Firestore) tiene `hist` (lista de períodos `{e: etapa, i: fecha inicio, f: fecha fin o null}`, el último abierto es la etapa actual), `prev` (duración prevista en días, por etapa, propia de esa obra) y `prog` (fecha para la que está programada, solo si la etapa es Programada).
+- Los plazos por defecto de cada etapa se guardan en el documento `asignaciones/config-plazos` (campo `prev`). Se usa ese documento y no una colección nueva porque las reglas de Firestore ya permiten escribir en `asignaciones`. No uses ids que empiecen y terminen con doble guion bajo: Firestore los reserva.
+- `fix()` en `index.html` filtra los campos de lo que lee de la base. Si agregás un campo nuevo a las obras, agregalo también ahí o se perderá al guardar.
+- Reglas por etapa (constantes `CON_PLAZO`, `SOLO_DIAS` en `index.html`): **Proyecto/Planificación, Presupuestación/Adjudicación, Ejecución y Post-Venta** cuentan días y tienen plazo con semáforo. **Pendiente y En stand by** solo cuentan los días que llevan ahí (sin plazo). **Programada** no cuenta: tiene una fecha objetivo (campo `prog`). **Suspendida** no cuenta ni muestra nada. **Terminada** marca la fecha de fin de la obra.
+- Cómo se cuenta: días corridos desde la fecha de inicio. Estado del plazo: **en término**, **próxima a vencer** (le queda el 20% del plazo o menos, mínimo 2 días) y **demorada** (superó lo previsto). Sin duración prevista solo se cuentan días.
+- Todo se puede corregir a mano en el detalle de la obra: la fecha de inicio, los días que lleva (se ajustan entre sí), y las fechas de inicio y fin de las etapas anteriores (quedan pegadas: el fin de una es el inicio de la siguiente).
+- Las obras que ya tenían etapa antes de esta función no tienen fecha de inicio: aparecen como "sin fecha" hasta que alguien la cargue en el detalle de la obra, o use "Usar hoy como inicio en todas" en el panel "Plazos por etapa".
+- La planificación manual por días pintados (campo `plan`) se reemplazó por estas barras automáticas. Los datos viejos de `plan` no se borran, pero ya no se muestran.
+- Los colores de cada etapa son los mismos en la lista, los gráficos y el calendario (`ECOL`, `eVar` en `index.html`).
+
+## Plan teórico y fecha límite
+- Cada obra tiene dos seguimientos: el **real** (`hist`, lo que va pasando) y el **teórico** (`teo`, lo que se planificó: lista de `{e: etapa, i: inicio, f: fin}` editable). El calendario los dibuja en dos carriles: real arriba, teórico abajo.
+- `limite` es la fecha límite de la obra. `teo` se arma agregando etapas a mano; la fecha límite sirve para el semáforo y la línea roja del calendario. Las etapas que se planifican son `ORDEN_PLAN`.
+- El semáforo compara lo real con el plan teórico de la etapa en curso (si existe; si no, con la duración estimada). Si pasó la fecha límite y la obra no terminó, figura como demorada.
+- Todo es editable a mano en el detalle de la obra: etapa en curso, fechas reales y del plan, agregar o quitar períodos.
+- `fix()` filtra `teo` y `limite` al leer; si agregás otro campo a las obras, sumalo ahí también.
+- Cómo está organizado el panel de seguimiento (`seguimientoHtml` en `index.html`, clases `sg-*`): arriba un **resumen** con una sola tarjeta: la **fecha límite**, con un selector "Sin fecha límite / Con fecha límite" (el casillero de fecha aparece solo con "Con"), después dos **pestañas**: *Real* (tarjeta "Etapa actual", con el botón para agregar una etapa que ya pasó; la tarjeta "Etapas anteriores" solo aparece si hay alguna) y *Plan teórico* (plan actual y un asistente de tres pasos para armarlo). Los campos llevan la etiqueta arriba y el estado se muestra como un cartel de color. *Plan teórico* tiene una sola tarjeta, "Estimar el plan": la tabla de etapas con sus fechas y el botón "+ Agregar una etapa al plan" (cada etapa nueva se agrega a continuación de la última, con los días generales de "Duración general por etapa"). La **fecha límite se edita en la tarjeta de resumen de arriba** (visible en las dos pestañas). Las funciones `armar`, `planTeoAtras`, `planTeoAdelante` y `estimarPlan` siguen en `index.html` pero ya no tienen botón: el usuario pidió sacar "Armar el plan automáticamente". No agregues preguntas que el programa pueda resolver solo, ni repitas en una tarjeta lo que ya dice el resumen. Mantené esa jerarquía si agregás cosas: título, tarjetas con título, campos con etiqueta, textos de ayuda en gris.
+
+## Orden manual de las obras
+- Cada obra puede tener un campo `orden` (número) en `asignaciones/<id>`. Sin `orden`, vale su posición original x 1000 (`ordOf` en `index.html`). Para cambiar una obra de lugar se **arrastra la fila** (sin botones ni flechas a la vista: el usuario los pidió invisibles); no se arrastra si se aprieta sobre un campo editable (nombre, listas). Se guarda **solo esa obra** con un número intermedio entre sus nuevas vecinas (`moverObra`). No se puede arrastrar mientras está activo "Ordenar por prioridad". `fix()` filtra `orden`: no lo saques de ahí.
+
+## Acceso con código
+- Al abrir la página se pide un código numérico. El código correcto vive en Firestore, en el documento `seguridad/acceso` (campo `codigo`, de tipo **texto**), que nadie puede leer desde la página. Cada visitante anota el código que escribió en `miembros/<su uid>`, y las reglas (`firestore.rules`) solo dejan leer y escribir a quien tiene anotado el código vigente.
+- **Cambiar el código**: editar el campo `codigo` en la consola de Firebase. Corta el acceso de todos al instante; al recargar la página piden el nuevo. Nunca escribas el código real en ningún archivo ni lo repitas en el chat: el repositorio es público.
+- Si `seguridad/acceso` no existe o `codigo` no es texto, **nadie** puede entrar. Las reglas se publican a mano en la consola (Firestore → Reglas), igual que antes.
+- La pantalla de código está en `index.html` (`pedirCodigo`, `probe`, clases `gate-*`). Si cambia el diseño del login, mantenela simple: logo, un campo numérico y "Entrar".
+- Limitación a tener presente: con 6 dígitos alguien podría probar números con un programa. Si hace falta más protección, alargar el código (cambiarlo en la consola no requiere tocar la página).

@@ -1,27 +1,49 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Cualquier visitante (login anónimo) puede leer y escribir, pero con límites de tamaño.
+    // ACCESO CON CODIGO: solo entra quien escribió el código vigente.
+    // El código vive en el documento seguridad/acceso (campo "codigo", texto). Nadie puede leerlo desde la página:
+    // las reglas lo consultan por su cuenta. Cambiar ese campo corta el acceso de todos hasta que ingresen el nuevo.
     function signedIn() { return request.auth != null; }
+    function codigoVigente() { return get(/databases/$(database)/documents/seguridad/acceso).data.codigo; }
+    function esMiembro() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/miembros/$(request.auth.uid))
+        && get(/databases/$(database)/documents/miembros/$(request.auth.uid)).data.codigo == codigoVigente();
+    }
+
+    match /seguridad/{id} {
+      allow read, write: if false;
+    }
+
+    // Cada visitante (por su login anónimo) deja anotado el código que escribió; solo se acepta si es el correcto.
+    match /miembros/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow create, update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['codigo'])
+        && request.resource.data.codigo is string
+        && request.resource.data.codigo == codigoVigente();
+      allow delete: if false;
+    }
 
     match /asignaciones/{id} {
-      allow read: if signedIn();
-      allow write: if signedIn() && request.resource.size() < 20000;
+      allow read: if esMiembro();
+      allow write: if esMiembro() && request.resource.size() < 20000;
     }
     match /obras/{id} {
-      allow read: if signedIn();
-      allow create: if signedIn()
+      allow read: if esMiembro();
+      allow create: if esMiembro()
         && request.resource.data.nombre is string
         && request.resource.data.nombre.size() <= 200;
       allow update, delete: if false;
     }
     match /comentarios/{id} {
-      allow read: if signedIn();
-      allow create: if signedIn()
+      allow read: if esMiembro();
+      allow create: if esMiembro()
         && request.resource.data.autor == request.auth.uid
         && request.resource.data.texto is string
         && request.resource.data.texto.size() <= 2000;
-      allow delete: if signedIn() && resource.data.autor == request.auth.uid;
+      allow delete: if esMiembro() && resource.data.autor == request.auth.uid;
       allow update: if false;
     }
   }
