@@ -1,4 +1,5 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<div id="cover" aria-hidden="true"><img src="logo-ucc.svg" alt=""></div>
 <title>OFICINA TÉCNICA - Tablero de obras</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -253,6 +254,8 @@ main{padding-block:10px 60px;display:grid;gap:18px}
 .pr[data-v="Media"]{color:var(--warn);border-color:var(--warn)}
 .pr[data-v="Baja"]{color:var(--muted);border-color:var(--line)}
 #fPlazo,#plazosBtn,#planTop,#sortPr{display:none!important}
+#cover{position:fixed;inset:0;z-index:999;display:grid;place-items:center;align-content:center;gap:14px;background:var(--bg);color:var(--muted);font:600 13px var(--f-body);text-align:center;padding:16px}
+#cover img{height:44px;opacity:.55}
 #gate{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:16px;background:var(--bg)}
 .gate-box{width:min(380px,100%);background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:28px 24px;display:grid;gap:12px;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.12)}
 .gate-logo{height:44px;margin:0 auto}
@@ -1344,8 +1347,11 @@ renderAll();
 
 // Shared store
 (async()=>{
+  const quitarCubierta=()=>{const c=document.getElementById("cover"); if(c) c.remove();};
+  const fallaCubierta=t=>{const c=document.getElementById("cover"); if(c){c.removeAttribute("aria-hidden"); c.insertAdjacentHTML("beforeend","<div>"+t+"</div>");}};
+  setTimeout(()=>fallaCubierta("Está tardando más de lo normal. Recargá la página."),15000);
   const d=window.claude&&window.claude.use?await window.claude.use("db"):null;
-  if(!d){showNotice("Los cambios no se comparten en esta vista: se guardan solo mientras tengas la página abierta."); return;}
+  if(!d){quitarCubierta(); showNotice("Los cambios no se comparten en esta vista: se guardan solo mientras tengas la página abierta."); return;}
   db=d;
   try{const user=window.claude.use?await window.claude.use("user"):null; userNs=user; if(user&&user.id){try{myId=await user.id()}catch(e){}} if(user&&user.can){const w=await user.can("data.write"); if(w===false){canWrite=false; showNotice("Tenés acceso de solo lectura: podés ver las asignaciones pero no cambiarlas."); renderAll();}}}catch(e){}
   // Acceso con código: sin el código correcto las reglas de Firestore no dejan leer ni escribir nada
@@ -1360,7 +1366,8 @@ renderAll();
       try{await db.collection("miembros").doc(myId).set({codigo:c}); if(await probe()){ov.remove(); resolve(true); return;}}catch(ex){}
       er.textContent="Código incorrecto. Probá de nuevo."; bt.disabled=false; inp.select();});
   });
-  if(!(await probe())){ if(!myId){showNotice("No se pudo verificar tu acceso. Recargá la página."); return;} await pedirCodigo(); }
+  if(!(await probe())){ if(!myId){fallaCubierta("No se pudo verificar tu acceso. Recargá la página."); return;} await pedirCodigo(); }
+  quitarCubierta();
   const iniciar=()=>{
   db.collection("asignaciones").onSnapshot(snap=>{
     const next={}; snap.docs.forEach(doc=>{ if(doc.exists){const x=doc.data(); next[doc.id]=fix(x);}});
