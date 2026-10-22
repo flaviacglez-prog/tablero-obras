@@ -1602,10 +1602,11 @@ renderAll();
 .mj-vacio b{color:#fff;font-size:12px}
 .mj-vacio span{font-size:11px}
 #mj-add,.mj-cf .mj-b{width:84px;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;padding-left:0;padding-right:0;flex:none}
+.mj-tip{display:block;margin-top:2px;font-style:italic;color:#cfd8e3}
 </style>
 <button id="mj-tab" type="button" hidden aria-expanded="false" aria-controls="mj">Mejoras <b id="mj-n">0</b></button>
 <aside id="mj" hidden aria-label="Mejoras de la interfaz">
-  <div class="mj-h"><div class="mj-ht"><h2>Mejoras de la página</h2><p class="mj-sub">Escribí una idea para mejorar la página. La ven todos. Para sumar una foto, pegala con Ctrl+V.</p></div><button class="mj-x" type="button" id="mj-cerrar" aria-label="Cerrar">×</button></div>
+  <div class="mj-h"><div class="mj-ht"><h2>Mejoras de la página</h2><p class="mj-sub">Escribí una idea para mejorar la página. La ven todos.<span class="mj-tip">Para sumar una foto, pegala con Ctrl+V.</span></p></div><button class="mj-x" type="button" id="mj-cerrar" aria-label="Cerrar">×</button></div>
   <form class="mj-new" id="mj-form">
     <div class="mj-r1">
       <div class="mj-fld"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><input type="text" id="mj-nom" maxlength="60" placeholder="Tu nombre" aria-label="Tu nombre" autocomplete="name"></div>
