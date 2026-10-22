@@ -37,6 +37,15 @@ service cloud.firestore {
         && request.resource.data.nombre.size() <= 200;
       allow update, delete: if false;
     }
+    // Mejoras de la página (panel lateral): cada mejora trae sus fotos (achicadas) y comentarios dentro del documento.
+    match /mejoras/{id} {
+      allow read: if esMiembro();
+      allow create, update: if esMiembro()
+        && request.resource.size() < 900000
+        && request.resource.data.t is string
+        && request.resource.data.t.size() <= 500;
+      allow delete: if esMiembro();
+    }
     match /comentarios/{id} {
       allow read: if esMiembro();
       allow create: if esMiembro()
