@@ -1532,50 +1532,55 @@ renderAll();
 .mj-vacio{color:var(--muted);font-size:12px;text-align:center;padding:20px 0}
 #mj-zoom{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.85);display:grid;place-items:center;padding:16px;cursor:zoom-out}
 #mj-zoom img{max-width:100%;max-height:100%;border-radius:8px}
-/* Mejoras - estilo limpio: hoja pegada al borde derecho, fondo liso, azul UCC solo en los detalles */
-#mj{top:0;max-height:none;bottom:0;right:0;width:min(400px,100vw);border-radius:0;border:0;border-left:1px solid var(--line);background:var(--surface);box-shadow:-10px 0 34px rgba(0,0,0,.14);overflow:clip;opacity:1;margin-top:0;padding-top:env(safe-area-inset-top,0px);transform:translateX(105%)}
-#mj.open{transform:none}
-#mj::before,#mj::after{display:none}
-.mj-h{background:none;border-radius:0;box-shadow:none;margin:0;padding:20px 20px 14px;border-bottom:1px solid var(--line)}
-.mj-h h2{color:var(--fg);font:700 17px/1.2 var(--f-display)}
-.mj-sub{color:var(--muted);font-size:12px;margin-top:4px}
-.mj-x{background:none;color:var(--muted);width:30px;height:30px;border-radius:8px;box-shadow:none;font-size:20px}
-.mj-x:hover{background:var(--surface-2);color:var(--fg);transform:none}
-.mj-new{margin:0;padding:16px 20px;gap:10px;background:color-mix(in srgb,var(--total-bg) 3%,var(--surface));border:0;border-bottom:1px solid var(--line);border-radius:0;box-shadow:none}
-#mj input[type=text],#mj textarea{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 10px 9px 34px}
-#mj input[type=text]:focus,#mj textarea:focus{border-color:var(--total-bg);box-shadow:0 0 0 3px color-mix(in srgb,var(--total-bg) 14%,transparent)}
-#mj textarea{min-height:76px}
-.mj-fld svg,.mj-cin svg{color:var(--muted);top:11px}
+/* Mejoras - opción C: panel azul UCC con tarjetas de vidrio y botón blanco (igual en modo claro y oscuro) */
+#mj{top:12px;right:12px;bottom:auto;max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);width:min(420px,calc(100vw - 24px));border-radius:26px;border:1px solid rgba(255,255,255,.14);color:#fff;background:linear-gradient(160deg,#0b3f74 0%,#002C55 52%,#001a33 100%);box-shadow:0 22px 60px rgba(0,20,50,.5);overflow:clip;opacity:0;pointer-events:none;margin-top:0;padding-top:0;transform:translateX(calc(100% + 24px));transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .25s}
+#mj.open{transform:none;opacity:1;pointer-events:auto}
+#mj::before{display:block;content:"";position:absolute;width:260px;height:260px;top:-110px;right:-90px;border-radius:50%;background:radial-gradient(circle,rgba(86,160,255,.55),rgba(86,160,255,0) 70%);pointer-events:none;z-index:0}
+#mj::after{display:none}
+.mj-h{background:none;box-shadow:none;border:0;border-radius:0;margin:0;padding:22px 20px 12px}
+.mj-h h2{color:#fff;font:700 20px/1.2 var(--f-display);letter-spacing:-.01em}
+.mj-sub{color:rgba(255,255,255,.68);font-size:12.5px;margin-top:6px}
+.mj-x{background:rgba(255,255,255,.14);color:#fff;border-radius:50%;width:32px;height:32px;box-shadow:none;font-size:18px}
+.mj-x:hover{background:rgba(255,255,255,.26);transform:rotate(90deg)}
+.mj-new{margin:6px 14px 0;padding:14px;gap:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:20px;box-shadow:none}
+#mj input[type=text],#mj textarea{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.15);color:#fff;border-radius:12px;padding:10px 12px 10px 38px}
+#mj input[type=text]::placeholder,#mj textarea::placeholder{color:rgba(255,255,255,.5)}
+#mj input[type=text]:hover,#mj textarea:hover{border-color:rgba(255,255,255,.3)}
+#mj input[type=text]:focus,#mj textarea:focus{border-color:#8dbcff;background:rgba(255,255,255,.13);box-shadow:0 0 0 3px rgba(141,188,255,.25)}
+.mj-fld svg,.mj-cin svg{color:rgba(255,255,255,.62);top:12px}
 .mj-cin svg{top:50%}
-.mj-b,#mj-add{background:var(--total-bg);color:#fff;border-radius:8px;box-shadow:none;padding:9px 16px}
-.mj-g{background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:9px 14px}
-.mj-g:hover{background:var(--surface-2);transform:none}
-.mj-l{padding:14px 20px 24px;gap:10px;background:none;border:0;margin:0;flex:1 1 auto}
-.mj-i{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:10px;box-shadow:none}
-.mj-i.ok{border-left-color:var(--obra)}
-.mj-top,.mj-i.ok .mj-top{background:none;padding:12px}
-.mj-top .mj-fotos{width:calc(2*64px + 8px)}
-.mj-top .mj-fotos:has(.mj-ft:only-child){width:64px}
-.mj-fotos img{width:64px;height:64px;border:1px solid var(--line);border-radius:8px;box-shadow:none}
-.mj-t{font:600 13px/1.35 var(--f-body)}
-.mj-chip{margin-right:6px}
-.mj-acc{margin-top:6px}
-.mj-acc button{background:none;border:1px solid var(--line);border-radius:6px;padding:4px 9px;font-size:11px}
-.mj-acc button svg{width:13px;height:13px}
-.mj-acc .mj-hecha{color:var(--obra);background:none;border-color:var(--line)}
-.mj-acc .mj-borrar{color:var(--martin);background:none;border-color:var(--line)}
-.mj-acc button:hover{background:var(--surface-2);transform:none;filter:none}
-.mj-cs{background:color-mix(in srgb,var(--total-bg) 3%,var(--surface));border-top:1px solid var(--line);padding:10px 12px}
-.mj-c{background:var(--surface);border:1px solid var(--line);border-radius:8px}
-.mj-c small b{color:var(--fg)}
-#mj .mj-cin input{border-radius:8px;padding:8px 10px 8px 34px}
-.mj-cf .mj-b{border-radius:8px;padding:0 14px}
-.mj-vacio{display:grid;justify-items:center;gap:4px;padding:36px 0;color:var(--muted)}
-.mj-vacio svg{width:36px;height:36px;opacity:.5;margin-bottom:4px}
-.mj-vacio b{color:var(--fg);font-size:13px}
+.mj-g{background:rgba(255,255,255,.13);color:#fff;border:0;border-radius:12px;padding:10px 15px}
+.mj-g:hover{background:rgba(255,255,255,.22)}
+.mj-b,#mj-add{background:#fff;color:#002C55;border-radius:12px;box-shadow:0 4px 14px rgba(0,0,0,.25);padding:10px 18px}
+.mj-err{color:#ffb3a8}
+.mj-l{padding:14px 14px 18px;gap:12px;background:none;border:0;margin:0}
+.mj-i{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:20px;box-shadow:none}
+.mj-i.ok{opacity:.8}
+.mj-top,.mj-i.ok .mj-top{background:none;padding:14px}
+.mj-top .mj-fotos{width:calc(2*76px + 8px)}
+.mj-top .mj-fotos:has(.mj-ft:only-child){width:76px}
+.mj-fotos img{width:76px;height:76px;border:0;border-radius:14px;box-shadow:0 3px 10px rgba(0,0,0,.35)}
+.mj-fotos .mj-q{background:#fff;color:#002C55;border:0}
+.mj-t{color:#fff;font:600 13px/1.35 var(--f-body)}
+.mj-i.ok .mj-t{color:rgba(255,255,255,.6)}
+.mj-m{color:rgba(255,255,255,.62)}
+.mj-chip{display:inline-block;margin-right:6px;padding:2px 8px;border-radius:999px;font:700 10px var(--f-body);letter-spacing:.03em;text-transform:uppercase;background:rgba(255,200,90,.16);color:#ffd884}
+.mj-chip.ok{background:rgba(90,210,130,.16);color:#9be8ae}
+.mj-acc button{border-radius:10px;padding:6px 10px;transition:background .15s}
+.mj-acc .mj-hecha{background:rgba(90,210,130,.15);color:#9be8ae;border-color:rgba(90,210,130,.35)}
+.mj-acc .mj-borrar{background:rgba(255,120,105,.14);color:#ffa497;border-color:rgba(255,120,105,.35)}
+.mj-acc button:hover{filter:brightness(1.25);transform:none}
+.mj-cs{background:rgba(0,0,0,.2);border-top:1px solid rgba(255,255,255,.1);padding:12px 14px}
+.mj-c{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:#fff}
+.mj-c small{color:rgba(255,255,255,.58)}
+.mj-c small b{color:#fff}
+.mj-c small button{color:rgba(255,255,255,.55)}
+#mj .mj-cin input{border-radius:12px;padding:9px 10px 9px 34px}
+.mj-cf .mj-b{border-radius:12px;padding:0 15px}
+.mj-vacio{display:grid;justify-items:center;gap:4px;padding:34px 0;color:rgba(255,255,255,.6)}
+.mj-vacio svg{width:40px;height:40px;color:#fff;opacity:.5;margin-bottom:4px}
+.mj-vacio b{color:#fff;font-size:13px}
 .mj-vacio span{font-size:12px}
-.mj-chip{display:inline-block;padding:2px 8px;border-radius:999px;font:700 10px var(--f-body);letter-spacing:.03em;text-transform:uppercase;background:color-mix(in srgb,var(--warn) 16%,transparent);color:var(--warn)}
-.mj-chip.ok{background:color-mix(in srgb,var(--obra) 16%,transparent);color:var(--obra)}
 </style>
 <button id="mj-tab" type="button" hidden aria-expanded="false" aria-controls="mj">Mejoras <b id="mj-n">0</b></button>
 <aside id="mj" hidden aria-label="Mejoras de la interfaz">
