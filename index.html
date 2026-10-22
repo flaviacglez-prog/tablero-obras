@@ -1532,21 +1532,25 @@ renderAll();
 .mj-vacio{color:var(--muted);font-size:12px;text-align:center;padding:20px 0}
 #mj-zoom{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.85);display:grid;place-items:center;padding:16px;cursor:zoom-out}
 #mj-zoom img{max-width:100%;max-height:100%;border-radius:8px}
-/* Colores de Mejoras: azul UCC (--total-bg) y celeste (--plan), verde para "hecha", rojo para borrar */
-#mj{overflow:clip;background:linear-gradient(165deg,color-mix(in srgb,var(--plan) 17%,var(--surface)),var(--surface) 62%)}
-#mj::before,#mj::after{background:color-mix(in srgb,var(--plan) 15%,transparent)}
-.mj-fld svg,.mj-cin svg{color:var(--plan)}
-#mj input[type=text]:focus,#mj textarea:focus{border-color:var(--plan);box-shadow:0 0 0 3px color-mix(in srgb,var(--plan) 22%,transparent)}
+/* Colores de Mejoras: azul oscuro UCC (--total-bg, el de la tarjeta "Obras"), verde para "hecha", rojo para borrar */
+#mj{overflow:clip;background:linear-gradient(165deg,color-mix(in srgb,var(--total-bg) 13%,var(--surface)),var(--surface) 62%)}
+#mj::before,#mj::after{background:rgba(255,255,255,.09)}
+#mj::before{z-index:0}#mj::after{z-index:0}
+.mj-h{background:var(--total-bg);padding-bottom:18px;margin-bottom:14px}
+.mj-h h2{color:#fff}
+.mj-sub{color:rgba(255,255,255,.78)}
+.mj-fld svg,.mj-cin svg{color:var(--accent)}
+#mj input[type=text]:focus,#mj textarea:focus{border-color:var(--total-bg);box-shadow:0 0 0 3px color-mix(in srgb,var(--total-bg) 18%,transparent)}
 .mj-b{background:var(--total-bg);color:#fff}
-.mj-g{background:color-mix(in srgb,var(--plan) 18%,var(--surface));border:1px solid color-mix(in srgb,var(--plan) 40%,transparent)}
-.mj-i{border-color:color-mix(in srgb,var(--plan) 28%,var(--line))}
-.mj-top{background:color-mix(in srgb,var(--plan) 13%,var(--surface))}
+.mj-g{background:color-mix(in srgb,var(--total-bg) 11%,var(--surface));color:var(--accent);border:1px solid color-mix(in srgb,var(--total-bg) 30%,transparent)}
+.mj-i{border-color:color-mix(in srgb,var(--total-bg) 22%,var(--line))}
+.mj-top{background:color-mix(in srgb,var(--total-bg) 9%,var(--surface))}
 .mj-i.ok .mj-top{background:color-mix(in srgb,var(--obra) 14%,var(--surface))}
 .mj-acc .mj-hecha{color:var(--obra);background:var(--obra-soft);border-color:color-mix(in srgb,var(--obra) 40%,transparent)}
-.mj-c{background:color-mix(in srgb,var(--plan) 7%,var(--surface));border-color:color-mix(in srgb,var(--plan) 22%,var(--line))}
+.mj-c{background:color-mix(in srgb,var(--total-bg) 5%,var(--surface));border-color:color-mix(in srgb,var(--total-bg) 18%,var(--line))}
 .mj-c small b{color:var(--accent)}
 #mj-tab{background:var(--total-bg)}
-#mj-tab b{background:var(--plan);color:#04223a}
+#mj-tab b{background:#fff;color:#002C55}
 </style>
 <button id="mj-tab" type="button" hidden aria-expanded="false" aria-controls="mj">Mejoras <b id="mj-n">0</b></button>
 <aside id="mj" hidden aria-label="Mejoras de la interfaz">
