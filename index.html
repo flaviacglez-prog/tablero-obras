@@ -1781,14 +1781,16 @@ window.initMinutas=function(db){
   const nomObra=id=>{const o=OBRAS.find(x=>x.id===id); return o?nom(o):"";};
   const obraOpts=()=>'<option value="">Sin obra (general)</option>'+SEDES.map(s=>`<optgroup label="${esc(SEDE_LABEL[s])}">`+LIVE().filter(o=>o.sede===s).map(o=>`<option value="${esc(o.id)}">${esc(nom(o))}</option>`).join("")+"</optgroup>").join("");
   const abrir=v=>{ if(v){const m=$("mj-cerrar"); if($("mj")&&$("mj").classList.contains("open")&&m) m.click();}
-    pan.classList.toggle("open",v); tab.setAttribute("aria-expanded",v); tab.hidden=v; if(!v) alinear(); };
+    pan.classList.toggle("open",v); tab.setAttribute("aria-expanded",v); tab.hidden=v; alinear(); };
   // En pantallas anchas la pestaña va al lado de la de Mejoras (a su izquierda), con el mismo alto que las tarjetas de arriba.
   // En pantallas angostas no hay lugar al costado y va justo debajo.
   const st=document.getElementById("stats"), mjt=$("mj-tab");
   function alinear(){const r=st.getBoundingClientRect(); if(!r.height) return;
     const h=Math.min(r.height,innerWidth<=760?150:1e9);
     if(innerWidth>=1340){ tab.style.top=(r.top+scrollY)+"px"; tab.style.height=h+"px"; tab.style.right=(mjt&&!mjt.hidden?mjt.offsetWidth:0)+"px"; tab.style.borderRadius="10px 0 0 10px"; }
-    else { tab.style.top=(r.top+scrollY+h+8)+"px"; tab.style.height=""; tab.style.right="0"; tab.style.borderRadius="10px 0 0 10px"; }}
+    else { tab.style.top=(r.top+scrollY+h+8)+"px"; tab.style.height=""; tab.style.right="0"; tab.style.borderRadius="10px 0 0 10px"; }
+    // Pegadas: la de Mejoras queda recta del lado de la unión y con una línea finita gris clara de separación
+    if(mjt){const junto=innerWidth>=1340&&!tab.hidden; mjt.style.borderRadius=junto?"0":""; mjt.style.borderLeft=junto?"1px solid rgba(255,255,255,.3)":"";}}
   tab.hidden=false; pan.hidden=false; alinear(); addEventListener("resize",alinear); addEventListener("load",alinear);
   if(window.ResizeObserver) new ResizeObserver(alinear).observe(st);
   tab.onclick=()=>abrir(true); $("mn-cerrar").onclick=()=>abrir(false);
