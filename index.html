@@ -1580,6 +1580,12 @@ window.initMejoras=function(db){
   $("mj-cerrar").onclick=()=>abrir(false);
   document.addEventListener("keydown",e=>{if(e.key==="Escape"){const z=$("mj-zoom"); if(z) z.remove(); else if(pan.classList.contains("open")) abrir(false);}});
   $("mj-fbtn").onclick=async()=>{const d=await elegirFoto(); if(d){nuevas.push(d); pintarPrev();}};
+  // Pegar una captura o imagen copiada (Ctrl+V) dentro del formulario de arriba
+  $("mj-form").addEventListener("paste",async e=>{
+    const fs=[...(e.clipboardData&&e.clipboardData.files||[])].filter(f=>f.type.startsWith("image/")); if(!fs.length) return;
+    e.preventDefault();
+    for(const f of fs){ if(nuevas.length>=MAXF){$("mj-err").textContent="Máximo "+MAXF+" fotos por idea."; break;}
+      try{nuevas.push(await achicar(f)); pintarPrev();}catch(x){showNotice("No se pudo usar esa imagen. Probá con otra.");} }});
   $("mj-prev").onclick=e=>{const b=e.target.closest("[data-n]"); if(b){nuevas.splice(+b.dataset.n,1); pintarPrev();}};
   $("mj-form").onsubmit=async e=>{e.preventDefault(); const t=$("mj-txt").value.trim(), er=$("mj-err"); er.textContent="";
     if(!t){er.textContent="Escribí la idea."; return;} const n=nombre(); if(!n){er.textContent="Poné tu nombre."; $("mj-nom").focus(); return;}
