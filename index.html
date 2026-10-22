@@ -1532,80 +1532,88 @@ renderAll();
 .mj-vacio{color:var(--muted);font-size:12px;text-align:center;padding:20px 0}
 #mj-zoom{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.85);display:grid;place-items:center;padding:16px;cursor:zoom-out}
 #mj-zoom img{max-width:100%;max-height:100%;border-radius:8px}
-/* Mejoras - opción C: panel azul UCC con tarjetas de vidrio y botón blanco (igual en modo claro y oscuro) */
-#mj{top:12px;right:12px;bottom:12px;max-height:none;width:min(420px,calc(100vw - 24px));border-radius:26px;border:1px solid rgba(255,255,255,.14);color:#fff;background:linear-gradient(160deg,#0b3f74 0%,#002C55 52%,#001a33 100%);box-shadow:0 22px 60px rgba(0,20,50,.5);overflow:clip;opacity:0;pointer-events:none;margin-top:0;padding-top:0;transform:translateX(calc(100% + 24px));transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .25s}
+/* Mejoras - panel azul liso (el mismo azul de la tarjeta "Obras"), compacto */
+#mj{top:12px;right:12px;bottom:12px;max-height:none;width:min(380px,calc(100vw - 24px));border-radius:18px;border:0;color:#fff;background:var(--total-bg);box-shadow:0 16px 44px rgba(0,20,50,.4);overflow:clip;opacity:0;pointer-events:none;margin-top:0;padding-top:0;transform:translateX(calc(100% + 24px));transition:transform .3s cubic-bezier(.2,.8,.2,1),opacity .2s}
 #mj.open{transform:none;opacity:1;pointer-events:auto}
-#mj::before{display:block;content:"";position:absolute;width:260px;height:260px;top:-110px;right:-90px;border-radius:50%;background:radial-gradient(circle,rgba(86,160,255,.55),rgba(86,160,255,0) 70%);pointer-events:none;z-index:0}
-#mj::after{display:none}
-.mj-h{background:none;box-shadow:none;border:0;border-radius:0;margin:0;padding:22px 20px 12px}
-.mj-h h2{color:#fff;font:700 20px/1.2 var(--f-display);letter-spacing:-.01em}
-.mj-sub{color:rgba(255,255,255,.68);font-size:12.5px;margin-top:6px}
-.mj-x{background:rgba(255,255,255,.14);color:#fff;border-radius:50%;width:32px;height:32px;box-shadow:none;font-size:18px}
-.mj-x:hover{background:rgba(255,255,255,.26);transform:rotate(90deg)}
-.mj-new{margin:6px 14px 0;padding:14px;gap:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:20px;box-shadow:none}
-#mj input[type=text],#mj textarea{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.15);color:#fff;border-radius:12px;padding:10px 12px 10px 38px}
+#mj::before,#mj::after{display:none}
+.mj-h{background:none;box-shadow:none;border:0;border-radius:0;margin:0;padding:14px 14px 8px;gap:8px}
+.mj-h h2{color:#fff;font:700 16px/1.2 var(--f-display);letter-spacing:0}
+.mj-sub{color:rgba(255,255,255,.65);font-size:11px;margin-top:3px}
+.mj-x{background:rgba(255,255,255,.12);color:#fff;border-radius:8px;width:26px;height:26px;box-shadow:none;font-size:16px}
+.mj-x:hover{background:rgba(255,255,255,.24);transform:none}
+.mj-new{margin:2px 12px 0;padding:10px;gap:6px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:12px;box-shadow:none}
+.mj-r1{display:flex;gap:6px}
+.mj-r1 .mj-fld{flex:1;min-width:0}
+#mj input[type=text],#mj textarea{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);color:#fff;border-radius:8px;font-size:12px;padding:6px 8px 6px 28px}
 #mj input[type=text]::placeholder,#mj textarea::placeholder{color:rgba(255,255,255,.5)}
 #mj input[type=text]:hover,#mj textarea:hover{border-color:rgba(255,255,255,.3)}
-#mj input[type=text]:focus,#mj textarea:focus{border-color:#8dbcff;background:rgba(255,255,255,.13);box-shadow:0 0 0 3px rgba(141,188,255,.25)}
-.mj-fld svg,.mj-cin svg{color:rgba(255,255,255,.62);top:12px}
+#mj input[type=text]:focus,#mj textarea:focus{border-color:#fff;background:rgba(255,255,255,.12);box-shadow:none}
+#mj textarea{min-height:46px}
+.mj-fld svg,.mj-cin svg{color:rgba(255,255,255,.6);left:9px;top:8px;width:13px;height:13px}
 .mj-cin svg{top:50%}
-.mj-g{background:rgba(255,255,255,.13);color:#fff;border:0;border-radius:12px;padding:10px 15px}
-.mj-g:hover{background:rgba(255,255,255,.22)}
-.mj-b,#mj-add{background:#fff;color:#002C55;border-radius:12px;box-shadow:0 4px 14px rgba(0,0,0,.25);padding:10px 18px}
-.mj-err{color:#ffb3a8}
-.mj-l{padding:14px 14px 18px;gap:12px;background:none;border:0;margin:0}
-.mj-i{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:20px;box-shadow:none}
-.mj-i.ok{opacity:.8}
-.mj-top,.mj-i.ok .mj-top{background:none;padding:14px}
-.mj-top .mj-fotos{width:calc(2*76px + 8px)}
-.mj-top .mj-fotos:has(.mj-ft:only-child){width:76px}
-.mj-fotos img{width:76px;height:76px;border:0;border-radius:14px;box-shadow:0 3px 10px rgba(0,0,0,.35)}
-.mj-fotos .mj-q{background:#fff;color:#002C55;border:0}
-.mj-t{color:#fff;font:600 13px/1.35 var(--f-body)}
-.mj-i.ok .mj-t{color:rgba(255,255,255,.6)}
-.mj-m{color:rgba(255,255,255,.62)}
-.mj-chip{display:inline-block;margin-right:6px;padding:2px 8px;border-radius:999px;font:700 10px var(--f-body);letter-spacing:.03em;text-transform:uppercase;background:rgba(255,200,90,.16);color:#ffd884}
-.mj-chip.ok{background:rgba(90,210,130,.16);color:#9be8ae}
-.mj-acc button{border-radius:10px;padding:6px 10px;transition:background .15s}
+.mj-g{background:rgba(255,255,255,.12);color:#fff;border:0;border-radius:8px;padding:0 10px;font-size:11.5px;gap:5px;white-space:nowrap}
+.mj-g:hover{background:rgba(255,255,255,.22);transform:none}
+.mj-g svg,#mj-add svg{width:13px;height:13px}
+.mj-row{justify-content:flex-end}
+.mj-b,#mj-add{background:#fff;color:#002C55;border-radius:8px;box-shadow:none;padding:6px 12px;font-size:11.5px;gap:5px}
+.mj-b:hover:not(:disabled){transform:none;filter:brightness(.93)}
+.mj-err{color:#ffb3a8;font-size:11px}
+.mj-l{padding:10px 12px 14px;gap:8px;background:none;border:0;margin:0}
+.mj-i{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:12px;box-shadow:none}
+.mj-top{background:none;padding:8px 10px;gap:8px;align-items:center}
+.mj-top .mj-fotos{width:calc(2*44px + 4px);gap:4px}
+.mj-top .mj-fotos:has(.mj-ft:only-child){width:44px}
+.mj-fotos img{width:44px;height:44px;border:0;border-radius:8px;box-shadow:none}
+.mj-fotos .mj-q{background:#fff;color:#002C55;border:0;width:16px;height:16px;font-size:11px;top:-5px;right:-5px;box-shadow:none}
+.mj-info{gap:4px}
+.mj-t{color:#fff;font:600 12.5px/1.3 var(--f-body)}
+.mj-mrow{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap}
+.mj-m{color:rgba(255,255,255,.6);font-size:10.5px}
+.mj-acc{margin:0;gap:4px}
+.mj-acc button{border-radius:6px;padding:3px 7px;font-size:10.5px;gap:4px}
+.mj-acc button svg{width:11px;height:11px}
 .mj-acc .mj-hecha{background:rgba(90,210,130,.15);color:#9be8ae;border-color:rgba(90,210,130,.35)}
-.mj-acc .mj-borrar{background:rgba(255,120,105,.14);color:#ffa497;border-color:rgba(255,120,105,.35)}
+.mj-acc .mj-borrar{background:rgba(255,120,105,.13);color:#ffa497;border-color:rgba(255,120,105,.35)}
 .mj-acc button:hover{filter:brightness(1.25);transform:none}
-.mj-cs{background:rgba(0,0,0,.2);border-top:1px solid rgba(255,255,255,.1);padding:12px 14px}
-.mj-c{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:#fff}
-.mj-c small{color:rgba(255,255,255,.58)}
+.mj-cs{background:rgba(0,0,0,.18);border-top:1px solid rgba(255,255,255,.1);padding:6px 8px;gap:4px}
+.mj-c{background:rgba(255,255,255,.08);border:0;border-radius:8px;padding:4px 8px;font-size:11.5px;color:#fff;gap:0}
+.mj-c small{color:rgba(255,255,255,.55);font-size:10px}
 .mj-c small b{color:#fff}
-.mj-c small button{color:rgba(255,255,255,.55)}
-#mj .mj-cin input{border-radius:12px;padding:9px 10px 9px 34px}
-.mj-cf .mj-b{border-radius:12px;padding:0 15px}
-.mj-vacio{display:grid;justify-items:center;gap:4px;padding:34px 0;color:rgba(255,255,255,.6)}
-.mj-vacio svg{width:40px;height:40px;color:#fff;opacity:.5;margin-bottom:4px}
-.mj-vacio b{color:#fff;font-size:13px}
-.mj-vacio span{font-size:12px}
-.mj-sep{display:flex;align-items:center;gap:10px;margin:8px 2px 0;color:rgba(255,255,255,.5);font:700 10.5px var(--f-body);letter-spacing:.08em;text-transform:uppercase}
+.mj-c small button{color:rgba(255,255,255,.5);font-size:11px}
+.mj-cf{gap:5px}
+#mj .mj-cin input{border-radius:8px;padding:4px 8px 4px 26px;font-size:11.5px}
+.mj-cin svg{left:8px}
+.mj-cf .mj-b{border-radius:8px;padding:0 10px;font-size:11px}
+.mj-sep{display:flex;align-items:center;gap:8px;margin:4px 2px 0;color:rgba(255,255,255,.5);font:700 10px var(--f-body);letter-spacing:.08em;text-transform:uppercase}
 .mj-sep::before,.mj-sep::after{content:"";flex:1;height:1px;background:rgba(255,255,255,.14)}
 .mj-sep span{flex:none}
-/* Idea hecha: pasa a segundo plano (borde punteado, apagada, foto en gris y título tachado) */
-.mj-i.ok{opacity:1;background:rgba(255,255,255,.025);border:1px dashed rgba(255,255,255,.2)}
+/* Idea hecha: segundo plano (borde punteado, apagada, foto en gris, título tachado) */
+.mj-i.ok{background:rgba(255,255,255,.025);border:1px dashed rgba(255,255,255,.2)}
 .mj-i.ok .mj-t{color:rgba(255,255,255,.52);text-decoration:line-through;text-decoration-thickness:1.5px}
 .mj-i.ok .mj-m{opacity:.55}
 .mj-i.ok .mj-fotos{opacity:.5}
 .mj-i.ok .mj-fotos img{filter:grayscale(1)}
 .mj-i.ok .mj-cs{opacity:.45;background:none}
 .mj-i.ok .mj-cs:hover,.mj-i.ok .mj-cs:focus-within{opacity:.9}
-.mj-i.ok .mj-chip.ok{background:rgba(90,210,130,.22);color:#9be8ae}
 .mj-i.ok .mj-hecha{background:rgba(255,255,255,.08);color:rgba(255,255,255,.75);border-color:rgba(255,255,255,.25)}
 .mj-i.ok .mj-borrar{opacity:.7}
+.mj-vacio{display:grid;justify-items:center;gap:3px;padding:24px 0;color:rgba(255,255,255,.6)}
+.mj-vacio svg{width:32px;height:32px;color:#fff;opacity:.5;margin-bottom:2px}
+.mj-vacio b{color:#fff;font-size:12px}
+.mj-vacio span{font-size:11px}
 </style>
 <button id="mj-tab" type="button" hidden aria-expanded="false" aria-controls="mj">Mejoras <b id="mj-n">0</b></button>
 <aside id="mj" hidden aria-label="Mejoras de la interfaz">
   <div class="mj-h"><div class="mj-ht"><h2>Mejoras de la página</h2><p class="mj-sub">Escribí una idea para mejorar la página. La ven todos.</p></div><button class="mj-x" type="button" id="mj-cerrar" aria-label="Cerrar">×</button></div>
   <form class="mj-new" id="mj-form">
-    <div class="mj-fld"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><input type="text" id="mj-nom" maxlength="60" placeholder="Tu nombre" aria-label="Tu nombre" autocomplete="name"></div>
+    <div class="mj-r1">
+      <div class="mj-fld"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><input type="text" id="mj-nom" maxlength="60" placeholder="Tu nombre" aria-label="Tu nombre" autocomplete="name"></div>
+      <button type="button" class="mj-g" id="mj-fbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 9"/></svg>+ Foto</button>
+    </div>
     <div class="mj-fld"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.7 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg><textarea id="mj-txt" maxlength="500" placeholder="Ej: que el calendario se vea más grande" aria-label="Nueva mejora"></textarea></div>
     <div class="mj-fotos" id="mj-prev"></div>
     <div class="mj-err" id="mj-err" role="alert"></div>
     <div class="mj-row">
-      <button type="button" class="mj-g" id="mj-fbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 9"/></svg>+ Foto</button>
       <button type="submit" class="mj-b" id="mj-add"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8zM19 14l.9 2.6L22.5 17.5l-2.6.9L19 21l-.9-2.6-2.6-.9 2.6-.9z"/></svg>Agregar</button>
     </div>
     <input type="file" id="mj-file" accept="image/*" hidden>
@@ -1643,8 +1651,8 @@ window.initMejoras=function(db){
     $("mj-lista").innerHTML=ids.length?ids.map((i,n)=>{const x=items[i], fs=Object.entries(x.fotos).sort((a,b)=>a[0]<b[0]?-1:1), cs=Object.entries(x.coms).sort((a,b)=>a[1].f-b[1].f);
       return `${x.ok&&(n===0||!items[ids[n-1]].ok)?'<div class="mj-sep"><span>Hechas</span></div>':""}<div class="mj-i${x.ok?" ok":""}"><div class="mj-top">
       ${fs.length?`<div class="mj-fotos">${fs.map(([k,d])=>`<div class="mj-ft"><img src="${d}" alt="Foto" data-z="1"><button class="mj-q" data-a="qf" data-i="${esc(i)}" data-k="${esc(k)}" aria-label="Quitar foto">×</button></div>`).join("")}</div>`:""}
-      <div class="mj-info"><div class="mj-t">${esc(x.t)}</div><div class="mj-m"><span class="mj-chip${x.ok?" ok":""}">${x.ok?"Hecha":"Pendiente"}</span>${x.n?esc(x.n)+" · ":""}${dia(x.f)}</div>
-        <div class="mj-acc"><button class="mj-hecha" data-a="ok" data-i="${esc(i)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>${x.ok?"Reabrir":"Marcar hecha"}</button><button class="mj-borrar" data-a="del" data-i="${esc(i)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>Borrar</button></div></div></div>
+      <div class="mj-info"><div class="mj-t">${esc(x.t)}</div><div class="mj-mrow"><div class="mj-m">${x.n?esc(x.n)+" · ":""}${dia(x.f)}</div>
+        <div class="mj-acc"><button class="mj-hecha" data-a="ok" data-i="${esc(i)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>${x.ok?"Reabrir":"Marcar hecha"}</button><button class="mj-borrar" data-a="del" data-i="${esc(i)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>Borrar</button></div></div></div></div>
       <div class="mj-cs">${cs.map(([k,c])=>`<div class="mj-c"><small><b>${esc(c.n||"Alguien")}</b>${dia(c.f)}<button data-a="qc" data-i="${esc(i)}" data-k="${esc(k)}" aria-label="Borrar comentario">×</button></small><p>${esc(c.t)}</p></div>`).join("")}
         <div class="mj-cf"><div class="mj-cin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.7 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg><input type="text" maxlength="500" placeholder="Escribir un comentario…" aria-label="Comentario" data-c="${esc(i)}" value="${esc(borr[i]||"")}"></div><button class="mj-b" data-a="com" data-i="${esc(i)}">Enviar</button></div></div></div>`}).join(""):'<div class="mj-vacio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg><b>Todavía no hay ideas</b><span>Escribí la primera arriba.</span></div>';
     if(keep){const e=document.querySelector(`#mj-lista [data-c="${CSS.escape(keep.i)}"]`); if(e){e.focus(); try{e.setSelectionRange(keep.s,keep.s)}catch(_){}}}
