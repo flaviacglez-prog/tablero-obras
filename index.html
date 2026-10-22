@@ -1473,22 +1473,21 @@ renderAll();
 #mj-tab:hover{filter:brightness(1.15)}
 @media (max-width:760px){#mj-tab{max-height:150px}}
 #mj-tab b{background:#fff;color:var(--accent);border-radius:9px;padding:1px 5px;margin-top:6px;font-size:11px;writing-mode:horizontal-tb;display:inline-block}
-#mj{position:fixed;top:12px;right:12px;bottom:12px;z-index:101;width:min(420px,calc(100vw - 24px));display:flex;flex-direction:column;overflow:hidden;border-radius:24px;border:1px solid var(--line);color:var(--fg);background:linear-gradient(165deg,color-mix(in srgb,var(--ot) 11%,var(--surface)),var(--surface) 58%);box-shadow:-6px 6px 28px rgba(0,0,0,.2);transform:translateX(calc(100% + 24px));transition:transform .25s;margin-top:env(safe-area-inset-top,0px)}
-#mj::before,#mj::after{content:"";position:absolute;border-radius:50%;background:color-mix(in srgb,var(--ot) 9%,transparent);pointer-events:none}
-#mj::before{width:170px;height:170px;top:-60px;right:-50px}
-#mj::after{width:46px;height:46px;top:62px;right:30px}
+#mj{position:fixed;top:12px;right:12px;max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);z-index:101;width:min(420px,calc(100vw - 24px));display:flex;flex-direction:column;overflow:hidden;border-radius:22px;border:1px solid var(--line);color:var(--fg);background:color-mix(in srgb,var(--ot) 10%,var(--surface));box-shadow:-6px 6px 28px rgba(0,0,0,.2);transform:translateX(calc(100% + 24px));transition:transform .25s;margin-top:env(safe-area-inset-top,0px)}
+.mj-ilu{position:absolute;top:4px;right:40px;width:100px;height:62px;pointer-events:none;z-index:0}
 #mj>*{position:relative;z-index:1}
 #mj.open{transform:none}
 #mj[hidden]{display:none!important}
-.mj-h{display:flex;align-items:flex-start;gap:10px;padding:22px 22px 6px}
+.mj-h{display:flex;align-items:flex-start;gap:10px;padding:18px 18px 10px}
 .mj-ht{flex:1;min-width:0}
 .mj-h h2{margin:0;font:700 19px/1.2 var(--f-display);color:var(--accent)}
-.mj-sub{margin:6px 0 0;color:var(--muted);font-size:12px}
-.mj-x{border:0;background:var(--surface);color:var(--fg);width:34px;height:34px;border-radius:50%;font-size:18px;cursor:pointer;box-shadow:0 1px 5px rgba(0,0,0,.15)}
-.mj-new{padding:10px 18px 16px;display:grid;gap:10px}
+.mj-sub{margin:12px 0 0;color:var(--muted);font-size:12px}
+.mj-x{border:0;background:none;color:var(--fg);width:28px;height:28px;border-radius:8px;font-size:20px;line-height:1;cursor:pointer;flex:none}
+.mj-x:hover{background:color-mix(in srgb,var(--ot) 14%,transparent)}
+.mj-new{margin:0 14px;padding:14px;display:grid;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:16px}
 .mj-fld{position:relative}
 .mj-fld svg{position:absolute;left:12px;top:11px;width:16px;height:16px;color:var(--muted);pointer-events:none}
-#mj input[type=text],#mj textarea{font:inherit;font-size:12.5px;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:9px 10px 9px 36px;width:100%;box-sizing:border-box;min-width:0}
+#mj input[type=text],#mj textarea{font:inherit;font-size:12.5px;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 10px 9px 36px;width:100%;box-sizing:border-box;min-width:0}
 #mj textarea{min-height:74px;resize:vertical}
 #mj input[type=text]:focus,#mj textarea:focus{outline:none;border-color:var(--accent)}
 .mj-row{display:flex;gap:8px;align-items:center;justify-content:space-between}
@@ -1496,10 +1495,10 @@ renderAll();
 .mj-err:empty{display:none}
 .mj-b{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:7px 14px;font:700 12px var(--f-body);cursor:pointer}
 .mj-b:disabled{opacity:.5;cursor:default}
-.mj-g{display:inline-flex;align-items:center;gap:6px;background:color-mix(in srgb,var(--ot) 13%,var(--surface));color:var(--accent);border:0;border-radius:999px;padding:9px 16px;font:600 12px var(--f-body);cursor:pointer}
+.mj-g{display:inline-flex;align-items:center;gap:8px;background:color-mix(in srgb,var(--ot) 13%,var(--surface));color:var(--accent);border:0;border-radius:10px;padding:10px 16px;font:600 12px var(--f-body);cursor:pointer}
 .mj-g svg,#mj-add svg{width:15px;height:15px;flex:none}
-#mj-add{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:9px 18px;font-size:12px}
-.mj-l{flex:1;overflow:auto;padding:4px 16px 16px;display:grid;gap:10px;align-content:start}
+#mj-add{display:inline-flex;align-items:center;gap:8px;border-radius:10px;padding:10px 18px;font-size:12px}
+.mj-l{flex:0 1 auto;min-height:0;overflow:auto;margin:12px 14px 14px;padding:10px;display:grid;gap:10px;align-content:start;background:color-mix(in srgb,var(--ot) 5%,var(--surface));border:1px solid var(--line);border-radius:16px}
 .mj-i{border:1px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.08)}
 .mj-top{display:flex;gap:12px;align-items:flex-start;padding:12px;background:color-mix(in srgb,var(--ot) 9%,var(--surface))}
 .mj-info{flex:1;min-width:0;display:grid;gap:6px}
@@ -1535,7 +1534,7 @@ renderAll();
 </style>
 <button id="mj-tab" type="button" hidden aria-expanded="false" aria-controls="mj">Mejoras <b id="mj-n">0</b></button>
 <aside id="mj" hidden aria-label="Mejoras de la interfaz">
-  <div class="mj-h"><div class="mj-ht"><h2>Mejoras de la página</h2><p class="mj-sub">Escribí una idea para mejorar la página. La ven todos.</p></div><button class="mj-x" type="button" id="mj-cerrar" aria-label="Cerrar">×</button></div>
+  <div class="mj-h"><svg class="mj-ilu" viewBox="0 0 120 74" fill="none" aria-hidden="true"><g transform="rotate(-10 60 38)"><rect x="34" y="14" width="62" height="42" rx="9" fill="#b9d1f7"/><rect x="26" y="20" width="62" height="42" rx="9" fill="#2f6ae0"/><path d="M40 33h34M40 41h26M40 49h18" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/></g><path d="M104 14l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#2f6ae0"/><circle cx="14" cy="22" r="3" fill="#b9d1f7"/><circle cx="108" cy="58" r="3.5" fill="#2f6ae0"/></svg><div class="mj-ht"><h2>Mejoras de la página</h2><p class="mj-sub">Escribí una idea para mejorar la página. La ven todos.</p></div><button class="mj-x" type="button" id="mj-cerrar" aria-label="Cerrar">×</button></div>
   <form class="mj-new" id="mj-form">
     <div class="mj-fld"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><input type="text" id="mj-nom" maxlength="60" placeholder="Tu nombre" aria-label="Tu nombre" autocomplete="name"></div>
     <div class="mj-fld"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.7 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg><textarea id="mj-txt" maxlength="500" placeholder="Ej: que el calendario se vea más grande" aria-label="Nueva mejora"></textarea></div>
@@ -1543,7 +1542,7 @@ renderAll();
     <div class="mj-err" id="mj-err" role="alert"></div>
     <div class="mj-row">
       <button type="button" class="mj-g" id="mj-fbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 9"/></svg>+ Foto</button>
-      <button type="submit" class="mj-b" id="mj-add"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8zM19 14l.9 2.6L22.5 17.5l-2.6.9L19 21l-.9-2.6-2.6-.9 2.6-.9z"/></svg>Agregar</button>
+      <button type="submit" class="mj-b" id="mj-add">Agregar<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
     </div>
     <input type="file" id="mj-file" accept="image/*" hidden>
   </form>
