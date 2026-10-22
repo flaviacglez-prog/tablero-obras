@@ -578,7 +578,6 @@ button.tk:hover{box-shadow:0 0 0 2px var(--accent-soft),0 0 0 3px var(--accent)}
 
 <div class="wrap"><div id="plazosPanel" class="pz" hidden></div></div>
 <div class="wrap"><main id="main"></main></div>
-<div class="wrap"><section id="minutas"></section></div>
 <datalist id="people"></datalist><datalist id="lleva-list"></datalist>
 
 <!-- Capa de datos: reemplaza la base interna de Claude por Firebase Firestore (ver firebase-config.js) -->
@@ -1704,112 +1703,126 @@ window.initMejoras=function(db){
 };
 </script>
 <style>
-#minutas{border-top:1px solid var(--line);margin-top:28px}
-.mn-n{color:var(--muted);font-weight:600}
-.mn{display:grid;gap:12px;padding:18px 0 40px}
-.mn-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.mn-h h2{margin:0;font:700 15px var(--f-display);flex:1}
-.mn-h p{margin:2px 0 0;color:var(--muted);font-size:11.5px;flex-basis:100%}
-.mn-btn{background:var(--total-bg);color:#fff;border:0;border-radius:8px;padding:8px 14px;font:700 12px var(--f-body);cursor:pointer}
+#mn-tab{position:absolute;right:0;top:360px;z-index:100;writing-mode:vertical-rl;display:flex;align-items:center;justify-content:center;gap:8px;min-height:96px;box-sizing:border-box;background:var(--total-bg);color:#fff;border:0;border-radius:10px 0 0 10px;padding:14px 8px;font:700 12px var(--f-body);letter-spacing:.06em;cursor:pointer;box-shadow:-2px 2px 8px rgba(0,0,0,.2)}
+#mn-tab:hover{filter:brightness(1.15)}
+#mn-tab b{background:#fff;color:#002C55;border-radius:9px;padding:1px 5px;margin-top:6px;font-size:11px;writing-mode:horizontal-tb;display:inline-block}
+#mn-p{position:fixed;top:12px;right:12px;bottom:12px;z-index:101;width:min(380px,calc(100vw - 24px));display:flex;flex-direction:column;overflow:clip;border-radius:18px;background:var(--total-bg);color:#fff;box-shadow:0 16px 44px rgba(0,20,50,.4);opacity:0;pointer-events:none;transform:translateX(calc(100% + 24px));transition:transform .3s cubic-bezier(.2,.8,.2,1),opacity .2s}
+#mn-p.open{transform:none;opacity:1;pointer-events:auto}
+#mn-p[hidden],#mn-tab[hidden]{display:none!important}
+.mn-h{display:flex;align-items:flex-start;gap:8px;padding:14px 14px 8px}
+.mn-h div{flex:1;min-width:0}
+.mn-h h2{margin:0;font:700 16px/1.2 var(--f-display);color:#fff}
+.mn-h p{margin:3px 0 0;color:rgba(255,255,255,.65);font-size:11px}
+.mn-x{border:0;background:rgba(255,255,255,.12);color:#fff;border-radius:8px;width:26px;height:26px;font-size:16px;line-height:1;cursor:pointer;flex:none}
+.mn-x:hover{background:rgba(255,255,255,.24)}
+.mn-top{padding:0 12px 8px}
+.mn-btn{background:#fff;color:#002C55;border:0;border-radius:8px;padding:6px 12px;font:700 11.5px var(--f-body);cursor:pointer;width:100%;box-sizing:border-box}
 .mn-btn:disabled{opacity:.5;cursor:default}
-.mn-g{background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:7px 12px;font:600 11.5px var(--f-body);cursor:pointer}
-.mn-form{display:grid;gap:10px;padding:14px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.mn-g{background:rgba(255,255,255,.12);color:#fff;border:0;border-radius:8px;padding:6px 12px;font:600 11.5px var(--f-body);cursor:pointer}
+.mn-form{display:grid;gap:7px;margin:0 12px 8px;padding:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:12px}
 .mn-form[hidden]{display:none}
-.mn-gr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-@media (max-width:640px){.mn-gr{grid-template-columns:1fr}}
-.mn-form label{display:grid;gap:4px;font:600 11px var(--f-body);color:var(--muted)}
-.mn-form input,.mn-form select{font:inherit;font-size:12.5px;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0;width:100%;box-sizing:border-box}
-.mn-form input:focus,.mn-form select:focus{outline:none;border-color:var(--total-bg)}
-.mn-or{color:var(--muted);font-size:11px;text-align:center}
-.mn-ayuda{color:var(--muted);font-size:11px;margin:0}
-.mn-err{color:var(--martin);font-size:11.5px;min-height:0}
+.mn-form label{display:grid;gap:3px;font:600 10.5px var(--f-body);color:rgba(255,255,255,.65)}
+.mn-form input,.mn-form select{font:inherit;font-size:12px;color:#fff;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:6px 8px;min-width:0;width:100%;box-sizing:border-box;color-scheme:dark}
+.mn-form select option,.mn-form select optgroup{color:#111;background:#fff}
+.mn-form input::placeholder{color:rgba(255,255,255,.45)}
+.mn-form input:focus,.mn-form select:focus{outline:none;border-color:#fff;background:rgba(255,255,255,.12)}
+.mn-form input[type=file]{padding:4px 6px;font-size:11px}
+.mn-ayuda{margin:0;color:rgba(255,255,255,.45);font-size:10px;font-style:italic}
+.mn-err{color:#ffb3a8;font-size:11px}
 .mn-err:empty{display:none}
-.mn-acc{display:flex;gap:8px;justify-content:flex-end}
-.mn-l{display:grid;gap:8px}
-.mn-i{display:flex;gap:12px;align-items:center;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
-.mn-ico{flex:none;width:38px;height:46px;border-radius:6px;background:var(--martin-soft);color:var(--martin);display:grid;place-items:center;font:800 10px var(--f-body);letter-spacing:.04em}
-.mn-ico.l{background:var(--ot-soft);color:var(--ot)}
-.mn-d{flex:1;min-width:0;display:grid;gap:3px}
-.mn-t{font:700 13px var(--f-body);overflow-wrap:anywhere}
-.mn-m{color:var(--muted);font-size:11.5px;overflow-wrap:anywhere}
-.mn-bt{display:flex;gap:6px;flex:none;flex-wrap:wrap;justify-content:flex-end}
-.mn-bt button{border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:8px;padding:6px 11px;font:600 11.5px var(--f-body);cursor:pointer}
-.mn-bt .ver{background:var(--total-bg);color:#fff;border-color:var(--total-bg)}
-.mn-bt .bor{color:var(--martin);background:var(--martin-soft);border-color:transparent}
-.mn-vacio{display:grid;justify-items:center;gap:4px;padding:40px 0;color:var(--muted);text-align:center}
-.mn-vacio svg{width:44px;height:44px;opacity:.5}
-.mn-vacio b{color:var(--fg);font-size:13px}
-@media (max-width:640px){.mn-i{flex-wrap:wrap}.mn-bt{flex-basis:100%;justify-content:flex-start}}
+.mn-acc{display:flex;gap:6px;justify-content:flex-end}
+.mn-acc .mn-btn{width:84px}
+.mn-l{flex:1;min-height:0;overflow:auto;padding:4px 12px 14px;display:grid;gap:8px;align-content:start}
+.mn-i{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:9px 10px;display:grid;gap:6px}
+.mn-r{display:flex;gap:9px;align-items:center}
+.mn-ico{flex:none;width:30px;height:36px;border-radius:5px;background:rgba(255,120,105,.18);color:#ffa497;display:grid;place-items:center;font:800 8.5px var(--f-body);letter-spacing:.04em}
+.mn-ico.l{background:rgba(141,188,255,.2);color:#b9d3ff}
+.mn-d{flex:1;min-width:0;display:grid;gap:2px}
+.mn-t{font:600 12.5px/1.3 var(--f-body);overflow-wrap:anywhere}
+.mn-m{color:rgba(255,255,255,.6);font-size:10.5px;overflow-wrap:anywhere}
+.mn-bt{display:flex;gap:5px;justify-content:flex-end}
+.mn-bt button{border-radius:6px;padding:3px 9px;font:600 10.5px var(--f-body);cursor:pointer;border:1px solid rgba(255,255,255,.25);background:none;color:#fff}
+.mn-bt .ver{background:#fff;color:#002C55;border-color:#fff}
+.mn-bt .bor{background:rgba(255,120,105,.13);color:#ffa497;border-color:rgba(255,120,105,.35)}
+.mn-vacio{display:grid;justify-items:center;gap:3px;padding:28px 0;color:rgba(255,255,255,.6);text-align:center}
+.mn-vacio svg{width:34px;height:34px;opacity:.5}
+.mn-vacio b{color:#fff;font-size:12px}
+.mn-vacio span{font-size:11px}
 </style>
+<button id="mn-tab" type="button" hidden aria-expanded="false" aria-controls="mn-p">Minutas <b id="mn-c">0</b></button>
+<aside id="mn-p" hidden aria-label="Minutas de reunión">
+  <div class="mn-h"><div><h2>Minutas de reunión</h2><p>Subí el PDF de cada reunión. Lo ven todos.</p></div><button class="mn-x" type="button" id="mn-cerrar" aria-label="Cerrar">×</button></div>
+  <div class="mn-top"><button class="mn-btn" id="mn-nueva" type="button">+ Subir minuta</button></div>
+  <form class="mn-form" id="mn-form" hidden>
+    <label>Título<input type="text" id="mn-t" maxlength="150" placeholder="Ej: Reunión de obras"></label>
+    <label>Fecha de la reunión<input type="date" id="mn-d"></label>
+    <label>Obra (opcional)<select id="mn-o"></select></label>
+    <label>Tu nombre<input type="text" id="mn-n" maxlength="60" placeholder="Quién la sube" autocomplete="name"></label>
+    <label>Archivo PDF<input type="file" id="mn-f" accept="application/pdf"></label>
+    <p class="mn-ayuda">Hasta 600 KB. Si pesa más, pegá abajo el link de Google Drive.</p>
+    <label>o link de Google Drive<input type="text" id="mn-l" maxlength="500" placeholder="https://drive.google.com/…"></label>
+    <div class="mn-err" id="mn-e" role="alert"></div>
+    <div class="mn-acc"><button class="mn-g" type="button" id="mn-cancel">Cancelar</button><button class="mn-btn" type="submit" id="mn-s">Subir</button></div>
+  </form>
+  <div class="mn-l" id="mn-lista"></div>
+</aside>
 <script>
 // Minutas: cada una es un documento de la colección "minutas" en Firestore.
 //   t (título), d (fecha aaaa-mm-dd), obra (id de la obra o ""), n (quien la subió), f (cuándo se subió),
 //   pdf (el PDF como texto "data:application/pdf;base64,…"), kb (tamaño) o link (enlace a Drive).
 // Un PDF entra hasta ~600 KB porque la base de datos no guarda archivos grandes: si pesa más, se pega el link.
-(function(){
-  const MAXKB=600; let col=null, items={}, abierto=false;
-  const $=id=>document.getElementById(id);
+window.initMinutas=function(db){
+  const MAXKB=600, col=db.collection("minutas"), $=id=>document.getElementById(id); let items={};
+  const tab=$("mn-tab"), pan=$("mn-p");
   const hoy=()=>{const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
   const fecha=d=>{const [y,m,dd]=(d||"").split("-"); return y?new Date(+y,m-1,+dd).toLocaleDateString("es-AR",{day:"numeric",month:"short",year:"numeric"}):"";};
   const nid=()=>"mn"+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
   const ids=()=>Object.keys(items).sort((a,b)=>(items[b].d>items[a].d?1:items[b].d<items[a].d?-1:items[b].f-items[a].f));
-  function obraOpts(){return '<option value="">Sin obra (general)</option>'+SEDES.map(s=>`<optgroup label="${esc(SEDE_LABEL[s])}">`+LIVE().filter(o=>o.sede===s).map(o=>`<option value="${esc(o.id)}">${esc(nom(o))}</option>`).join("")+"</optgroup>").join("");}
   const nomObra=id=>{const o=OBRAS.find(x=>x.id===id); return o?nom(o):"";};
-  function armar(main){
-    {
-      main.innerHTML=`<section class="mn" aria-label="Minutas"><div class="mn-h"><h2>Minutas de reunión <span class="mn-n" id="mn-n2"></span></h2><button class="mn-btn" id="mn-nueva" type="button">+ Subir minuta</button><p>Subí el PDF de cada reunión. Lo ven todos los que entran al tablero.</p></div>
-      <form class="mn-form" id="mn-form" hidden>
-        <div class="mn-gr"><label>Título<input type="text" id="mn-t" maxlength="150" placeholder="Ej: Reunión de obras"></label><label>Fecha de la reunión<input type="date" id="mn-d"></label></div>
-        <div class="mn-gr"><label>Obra (opcional)<select id="mn-o"></select></label><label>Tu nombre<input type="text" id="mn-n" maxlength="60" placeholder="Quién la sube" autocomplete="name"></label></div>
-        <label>Archivo PDF<input type="file" id="mn-f" accept="application/pdf"></label>
-        <p class="mn-ayuda">Hasta ${MAXKB} KB. Si pesa más, pegá abajo el link de Google Drive.</p>
-        <label>o link de Google Drive<input type="text" id="mn-l" maxlength="500" placeholder="https://drive.google.com/…"></label>
-        <div class="mn-err" id="mn-e" role="alert"></div>
-        <div class="mn-acc"><button class="mn-g" type="button" id="mn-c">Cancelar</button><button class="mn-btn" type="submit" id="mn-s">Subir</button></div>
-      </form><div class="mn-l" id="mn-l2"></div></section>`;
-      iniciarForm();
-    }
-    pintar();
-  }
-  function pintar(){
-    const l=$("mn-l2"); if(!l) return; const k=ids(); $("mn-n2").textContent=k.length?"("+k.length+")":"";
-    l.innerHTML=k.length?k.map(i=>{const x=items[i], ob=nomObra(x.obra);
-      return `<div class="mn-i"><div class="mn-ico${x.pdf?"":" l"}">${x.pdf?"PDF":"LINK"}</div><div class="mn-d"><div class="mn-t">${esc(x.t)}</div><div class="mn-m">${esc(fecha(x.d))}${ob?" · "+esc(ob):""}${x.n?" · subió "+esc(x.n):""}${x.pdf?" · "+x.kb+" KB":""}</div></div>
+  const obraOpts=()=>'<option value="">Sin obra (general)</option>'+SEDES.map(s=>`<optgroup label="${esc(SEDE_LABEL[s])}">`+LIVE().filter(o=>o.sede===s).map(o=>`<option value="${esc(o.id)}">${esc(nom(o))}</option>`).join("")+"</optgroup>").join("");
+  const abrir=v=>{ if(v){const m=$("mj-cerrar"); if($("mj")&&$("mj").classList.contains("open")&&m) m.click();}
+    pan.classList.toggle("open",v); tab.setAttribute("aria-expanded",v); tab.hidden=v; if(!v) alinear(); };
+  // La pestaña va justo debajo de la de Mejoras (que toma el alto de las tarjetas de arriba)
+  const st=document.getElementById("stats");
+  function alinear(){const r=st.getBoundingClientRect(); if(!r.height) return; const h=Math.min(r.height,innerWidth<=760?150:1e9); tab.style.top=(r.top+scrollY+h+8)+"px";}
+  tab.hidden=false; pan.hidden=false; alinear(); addEventListener("resize",alinear); addEventListener("load",alinear);
+  if(window.ResizeObserver) new ResizeObserver(alinear).observe(st);
+  tab.onclick=()=>abrir(true); $("mn-cerrar").onclick=()=>abrir(false);
+  const mjt=$("mj-tab"); if(mjt) mjt.addEventListener("click",()=>abrir(false));
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&pan.classList.contains("open")) abrir(false);});
+  function pintar(){const k=ids(); $("mn-c").textContent=k.length;
+    $("mn-lista").innerHTML=k.length?k.map(i=>{const x=items[i], ob=nomObra(x.obra);
+      return `<div class="mn-i"><div class="mn-r"><div class="mn-ico${x.pdf?"":" l"}">${x.pdf?"PDF":"LINK"}</div><div class="mn-d"><div class="mn-t">${esc(x.t)}</div><div class="mn-m">${esc(fecha(x.d))}${ob?" · "+esc(ob):""}${x.n?" · subió "+esc(x.n):""}${x.pdf?" · "+x.kb+" KB":""}</div></div></div>
       <div class="mn-bt"><button class="ver" data-m="ver" data-i="${esc(i)}">${x.pdf?"Ver PDF":"Abrir link"}</button><button class="bor" data-m="del" data-i="${esc(i)}">Borrar</button></div></div>`}).join("")
-      :'<div class="mn-vacio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg><b>Todavía no hay minutas</b><span>Tocá "Subir minuta" para cargar la primera.</span></div>';
-  }
-  function leer(file){return new Promise((ok,mal)=>{const r=new FileReader(); r.onload=()=>ok(r.result); r.onerror=mal; r.readAsDataURL(file);});}
-  function iniciarForm(){
-    $("mn-nueva").onclick=()=>{abierto=!abierto; $("mn-form").hidden=!abierto; if(abierto){$("mn-o").innerHTML=obraOpts(); $("mn-d").value=$("mn-d").value||hoy(); try{$("mn-n").value=$("mn-n").value||localStorage.getItem("obras-firma")||""}catch(e){} $("mn-t").focus();}};
-    $("mn-c").onclick=()=>{abierto=false; $("mn-form").hidden=true; $("mn-form").reset(); $("mn-e").textContent="";};
-    $("mn-form").onsubmit=async e=>{e.preventDefault(); const er=$("mn-e"); er.textContent="";
-      const t=$("mn-t").value.trim(), d=$("mn-d").value, n=$("mn-n").value.trim(), link=$("mn-l").value.trim(), f=$("mn-f").files[0];
-      if(!t){er.textContent="Poné un título."; return;} if(!d){er.textContent="Poné la fecha de la reunión."; return;} if(!n){er.textContent="Poné tu nombre."; return;}
-      if(!f&&!link){er.textContent="Elegí el PDF o pegá un link."; return;}
-      if(f&&f.type!=="application/pdf"){er.textContent="El archivo tiene que ser un PDF."; return;}
-      if(f&&f.size>MAXKB*1024){er.textContent=`Ese PDF pesa ${Math.round(f.size/1024)} KB y el máximo es ${MAXKB} KB. Subilo a Google Drive y pegá el link.`; return;}
-      if(!f&&!/^https?:\/\//i.test(link)){er.textContent="El link tiene que empezar con https://"; return;}
-      try{localStorage.setItem("obras-firma",n)}catch(x){}
-      const b=$("mn-s"); b.disabled=true;
-      try{const doc={t,d,n,obra:$("mn-o").value,f:Date.now()}; if(f){doc.pdf=await leer(f); doc.kb=Math.round(f.size/1024);} else doc.link=link;
-        await col.doc(nid()).set(doc); $("mn-form").reset(); abierto=false; $("mn-form").hidden=true;}
-      catch(x){er.textContent="No se pudo guardar. Probá de nuevo (si sigue fallando, avisá: puede faltar publicar las reglas nuevas en Firebase).";}
-      b.disabled=false;};
-    $("mn-l2").onclick=async e=>{const b=e.target.closest("button[data-m]"); if(!b) return; const i=b.dataset.i, x=items[i]; if(!x) return;
-      if(b.dataset.m==="ver"){
-        if(x.link){window.open(x.link,"_blank","noopener"); return;}
-        try{const bin=atob(x.pdf.split(",")[1]), u=new Uint8Array(bin.length); for(let k=0;k<bin.length;k++) u[k]=bin.charCodeAt(k);
-          const url=URL.createObjectURL(new Blob([u],{type:"application/pdf"})); if(!window.open(url,"_blank")) location.href=url; setTimeout(()=>URL.revokeObjectURL(url),60000);}
-        catch(x){showNotice("No se pudo abrir el PDF.");}
-      } else if(b.dataset.m==="del"&&confirm("¿Borrar esta minuta?")) col.doc(i).delete().catch(()=>showNotice("No se pudo borrar. Probá de nuevo."));};
-  }
-  window.initMinutas=function(db){
-    col=db.collection("minutas"); armar($("minutas"));
-    col.onSnapshot(s=>{items={}; s.docs.forEach(d=>{const v=d.data(); if(!v||typeof v.t!=="string") return;
-      items[d.id]={t:v.t,d:typeof v.d==="string"?v.d:"",n:typeof v.n==="string"?v.n:"",obra:typeof v.obra==="string"?v.obra:"",f:+v.f||0,
-        pdf:typeof v.pdf==="string"&&v.pdf.startsWith("data:application/pdf")?v.pdf:"",kb:+v.kb||0,link:typeof v.link==="string"?v.link:""};});
-      pintar();},()=>{});
-  };
-})();
+      :'<div class="mn-vacio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg><b>Todavía no hay minutas</b><span>Tocá "Subir minuta" para cargar la primera.</span></div>';}
+  const leer=file=>new Promise((ok,mal)=>{const r=new FileReader(); r.onload=()=>ok(r.result); r.onerror=mal; r.readAsDataURL(file);});
+  $("mn-nueva").onclick=()=>{const f=$("mn-form"); f.hidden=!f.hidden; if(!f.hidden){$("mn-o").innerHTML=obraOpts(); $("mn-d").value=$("mn-d").value||hoy(); try{$("mn-n").value=$("mn-n").value||localStorage.getItem("obras-firma")||""}catch(e){} $("mn-t").focus();}};
+  $("mn-cancel").onclick=()=>{$("mn-form").hidden=true; $("mn-form").reset(); $("mn-e").textContent="";};
+  $("mn-form").onsubmit=async e=>{e.preventDefault(); const er=$("mn-e"); er.textContent="";
+    const t=$("mn-t").value.trim(), d=$("mn-d").value, n=$("mn-n").value.trim(), link=$("mn-l").value.trim(), f=$("mn-f").files[0];
+    if(!t){er.textContent="Poné un título."; return;} if(!d){er.textContent="Poné la fecha de la reunión."; return;} if(!n){er.textContent="Poné tu nombre."; return;}
+    if(!f&&!link){er.textContent="Elegí el PDF o pegá un link."; return;}
+    if(f&&f.type!=="application/pdf"){er.textContent="El archivo tiene que ser un PDF."; return;}
+    if(f&&f.size>MAXKB*1024){er.textContent=`Ese PDF pesa ${Math.round(f.size/1024)} KB y el máximo es ${MAXKB} KB. Subilo a Google Drive y pegá el link.`; return;}
+    if(!f&&!/^https?:\/\//i.test(link)){er.textContent="El link tiene que empezar con https://"; return;}
+    try{localStorage.setItem("obras-firma",n)}catch(x){}
+    const b=$("mn-s"); b.disabled=true;
+    try{const doc={t,d,n,obra:$("mn-o").value,f:Date.now()}; if(f){doc.pdf=await leer(f); doc.kb=Math.round(f.size/1024);} else doc.link=link;
+      await col.doc(nid()).set(doc); $("mn-form").reset(); $("mn-form").hidden=true;}
+    catch(x){er.textContent="No se pudo guardar. Probá de nuevo (si sigue fallando, avisá: puede faltar publicar las reglas nuevas en Firebase).";}
+    b.disabled=false;};
+  $("mn-lista").onclick=e=>{const b=e.target.closest("button[data-m]"); if(!b) return; const i=b.dataset.i, x=items[i]; if(!x) return;
+    if(b.dataset.m==="ver"){
+      if(x.link){window.open(x.link,"_blank","noopener"); return;}
+      try{const bin=atob(x.pdf.split(",")[1]), u=new Uint8Array(bin.length); for(let k=0;k<bin.length;k++) u[k]=bin.charCodeAt(k);
+        const url=URL.createObjectURL(new Blob([u],{type:"application/pdf"})); if(!window.open(url,"_blank")) location.href=url; setTimeout(()=>URL.revokeObjectURL(url),60000);}
+      catch(z){showNotice("No se pudo abrir el PDF.");}
+    } else if(b.dataset.m==="del"&&confirm("¿Borrar esta minuta?")) col.doc(i).delete().catch(()=>showNotice("No se pudo borrar. Probá de nuevo."));};
+  col.onSnapshot(s=>{items={}; s.docs.forEach(d=>{const v=d.data(); if(!v||typeof v.t!=="string") return;
+    items[d.id]={t:v.t,d:typeof v.d==="string"?v.d:"",n:typeof v.n==="string"?v.n:"",obra:typeof v.obra==="string"?v.obra:"",f:+v.f||0,
+      pdf:typeof v.pdf==="string"&&v.pdf.startsWith("data:application/pdf")?v.pdf:"",kb:+v.kb||0,link:typeof v.link==="string"?v.link:""};});
+    pintar();},()=>{});
+  pintar();
+};
 </script>
 </body></html>
