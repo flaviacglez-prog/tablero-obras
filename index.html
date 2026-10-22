@@ -1533,7 +1533,7 @@ renderAll();
 #mj-zoom{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.85);display:grid;place-items:center;padding:16px;cursor:zoom-out}
 #mj-zoom img{max-width:100%;max-height:100%;border-radius:8px}
 /* Mejoras - opción C: panel azul UCC con tarjetas de vidrio y botón blanco (igual en modo claro y oscuro) */
-#mj{top:12px;right:12px;bottom:auto;max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);width:min(420px,calc(100vw - 24px));border-radius:26px;border:1px solid rgba(255,255,255,.14);color:#fff;background:linear-gradient(160deg,#0b3f74 0%,#002C55 52%,#001a33 100%);box-shadow:0 22px 60px rgba(0,20,50,.5);overflow:clip;opacity:0;pointer-events:none;margin-top:0;padding-top:0;transform:translateX(calc(100% + 24px));transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .25s}
+#mj{top:12px;right:12px;bottom:12px;max-height:none;width:min(420px,calc(100vw - 24px));border-radius:26px;border:1px solid rgba(255,255,255,.14);color:#fff;background:linear-gradient(160deg,#0b3f74 0%,#002C55 52%,#001a33 100%);box-shadow:0 22px 60px rgba(0,20,50,.5);overflow:clip;opacity:0;pointer-events:none;margin-top:0;padding-top:0;transform:translateX(calc(100% + 24px));transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .25s}
 #mj.open{transform:none;opacity:1;pointer-events:auto}
 #mj::before{display:block;content:"";position:absolute;width:260px;height:260px;top:-110px;right:-90px;border-radius:50%;background:radial-gradient(circle,rgba(86,160,255,.55),rgba(86,160,255,0) 70%);pointer-events:none;z-index:0}
 #mj::after{display:none}
@@ -1581,6 +1581,20 @@ renderAll();
 .mj-vacio svg{width:40px;height:40px;color:#fff;opacity:.5;margin-bottom:4px}
 .mj-vacio b{color:#fff;font-size:13px}
 .mj-vacio span{font-size:12px}
+.mj-sep{display:flex;align-items:center;gap:10px;margin:8px 2px 0;color:rgba(255,255,255,.5);font:700 10.5px var(--f-body);letter-spacing:.08em;text-transform:uppercase}
+.mj-sep::before,.mj-sep::after{content:"";flex:1;height:1px;background:rgba(255,255,255,.14)}
+.mj-sep span{flex:none}
+/* Idea hecha: pasa a segundo plano (borde punteado, apagada, foto en gris y título tachado) */
+.mj-i.ok{opacity:1;background:rgba(255,255,255,.025);border:1px dashed rgba(255,255,255,.2)}
+.mj-i.ok .mj-t{color:rgba(255,255,255,.52);text-decoration:line-through;text-decoration-thickness:1.5px}
+.mj-i.ok .mj-m{opacity:.55}
+.mj-i.ok .mj-fotos{opacity:.5}
+.mj-i.ok .mj-fotos img{filter:grayscale(1)}
+.mj-i.ok .mj-cs{opacity:.45;background:none}
+.mj-i.ok .mj-cs:hover,.mj-i.ok .mj-cs:focus-within{opacity:.9}
+.mj-i.ok .mj-chip.ok{background:rgba(90,210,130,.22);color:#9be8ae}
+.mj-i.ok .mj-hecha{background:rgba(255,255,255,.08);color:rgba(255,255,255,.75);border-color:rgba(255,255,255,.25)}
+.mj-i.ok .mj-borrar{opacity:.7}
 </style>
 <button id="mj-tab" type="button" hidden aria-expanded="false" aria-controls="mj">Mejoras <b id="mj-n">0</b></button>
 <aside id="mj" hidden aria-label="Mejoras de la interfaz">
@@ -1626,8 +1640,8 @@ window.initMejoras=function(db){
     document.querySelectorAll("#mj-lista [data-c]").forEach(e=>{borr[e.dataset.c]=e.value;});
     const ids=Object.keys(items).sort((a,b)=>(items[a].ok-items[b].ok)||(items[b].f-items[a].f));
     $("mj-n").textContent=ids.filter(i=>!items[i].ok).length;
-    $("mj-lista").innerHTML=ids.length?ids.map(i=>{const x=items[i], fs=Object.entries(x.fotos).sort((a,b)=>a[0]<b[0]?-1:1), cs=Object.entries(x.coms).sort((a,b)=>a[1].f-b[1].f);
-      return `<div class="mj-i${x.ok?" ok":""}"><div class="mj-top">
+    $("mj-lista").innerHTML=ids.length?ids.map((i,n)=>{const x=items[i], fs=Object.entries(x.fotos).sort((a,b)=>a[0]<b[0]?-1:1), cs=Object.entries(x.coms).sort((a,b)=>a[1].f-b[1].f);
+      return `${x.ok&&(n===0||!items[ids[n-1]].ok)?'<div class="mj-sep"><span>Hechas</span></div>':""}<div class="mj-i${x.ok?" ok":""}"><div class="mj-top">
       ${fs.length?`<div class="mj-fotos">${fs.map(([k,d])=>`<div class="mj-ft"><img src="${d}" alt="Foto" data-z="1"><button class="mj-q" data-a="qf" data-i="${esc(i)}" data-k="${esc(k)}" aria-label="Quitar foto">×</button></div>`).join("")}</div>`:""}
       <div class="mj-info"><div class="mj-t">${esc(x.t)}</div><div class="mj-m"><span class="mj-chip${x.ok?" ok":""}">${x.ok?"Hecha":"Pendiente"}</span>${x.n?esc(x.n)+" · ":""}${dia(x.f)}</div>
         <div class="mj-acc"><button class="mj-hecha" data-a="ok" data-i="${esc(i)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>${x.ok?"Reabrir":"Marcar hecha"}</button><button class="mj-borrar" data-a="del" data-i="${esc(i)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>Borrar</button></div></div></div>
