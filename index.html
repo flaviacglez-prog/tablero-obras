@@ -1575,7 +1575,7 @@ renderAll();
 .mj-acc .mj-hecha{background:rgba(90,210,130,.15);color:#9be8ae;border-color:rgba(90,210,130,.35)}
 .mj-acc .mj-borrar{background:rgba(255,120,105,.13);color:#ffa497;border-color:rgba(255,120,105,.35)}
 .mj-acc button:hover{filter:brightness(1.25);transform:none}
-.mj-cs{background:rgba(0,0,0,.18);border-top:1px solid rgba(255,255,255,.1);padding:6px 8px;gap:4px}
+.mj-cs{background:rgba(0,0,0,.18);border-top:1px solid rgba(255,255,255,.1);padding:6px 10px;gap:4px}
 .mj-c{background:rgba(255,255,255,.08);border:0;border-radius:8px;padding:4px 8px;font-size:11.5px;color:#fff;gap:0}
 .mj-c small{color:rgba(255,255,255,.55);font-size:10px}
 .mj-c small b{color:#fff}
@@ -1601,14 +1601,14 @@ renderAll();
 .mj-vacio svg{width:32px;height:32px;color:#fff;opacity:.5;margin-bottom:2px}
 .mj-vacio b{color:#fff;font-size:12px}
 .mj-vacio span{font-size:11px}
+#mj-add,.mj-cf .mj-b{width:84px;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;padding-left:0;padding-right:0;flex:none}
 </style>
 <button id="mj-tab" type="button" hidden aria-expanded="false" aria-controls="mj">Mejoras <b id="mj-n">0</b></button>
 <aside id="mj" hidden aria-label="Mejoras de la interfaz">
-  <div class="mj-h"><div class="mj-ht"><h2>Mejoras de la página</h2><p class="mj-sub">Escribí una idea para mejorar la página. La ven todos.</p></div><button class="mj-x" type="button" id="mj-cerrar" aria-label="Cerrar">×</button></div>
+  <div class="mj-h"><div class="mj-ht"><h2>Mejoras de la página</h2><p class="mj-sub">Escribí una idea para mejorar la página. La ven todos. Para sumar una foto, pegala con Ctrl+V.</p></div><button class="mj-x" type="button" id="mj-cerrar" aria-label="Cerrar">×</button></div>
   <form class="mj-new" id="mj-form">
     <div class="mj-r1">
       <div class="mj-fld"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><input type="text" id="mj-nom" maxlength="60" placeholder="Tu nombre" aria-label="Tu nombre" autocomplete="name"></div>
-      <button type="button" class="mj-g" id="mj-fbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 9"/></svg>+ Foto</button>
     </div>
     <div class="mj-fld"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.7 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg><textarea id="mj-txt" maxlength="500" placeholder="Ej: que el calendario se vea más grande" aria-label="Nueva mejora"></textarea></div>
     <div class="mj-fotos" id="mj-prev"></div>
@@ -1616,7 +1616,6 @@ renderAll();
     <div class="mj-row">
       <button type="submit" class="mj-b" id="mj-add"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8zM19 14l.9 2.6L22.5 17.5l-2.6.9L19 21l-.9-2.6-2.6-.9 2.6-.9z"/></svg>Agregar</button>
     </div>
-    <input type="file" id="mj-file" accept="image/*" hidden>
   </form>
   <div class="mj-l" id="mj-lista"></div>
 </aside>
@@ -1641,7 +1640,6 @@ window.initMejoras=function(db){
       c.width=Math.round(im.width*k); c.height=Math.round(im.height*k); c.getContext("2d").drawImage(im,0,0,c.width,c.height);
       let q=.75, d=c.toDataURL("image/jpeg",q); while(d.length>180000&&q>.35){q-=.1; d=c.toDataURL("image/jpeg",q);} d.length>180000?mal():ok(d);};
     im.onerror=()=>{URL.revokeObjectURL(u); mal();}; im.src=u;});}
-  function elegirFoto(){return new Promise(res=>{const f=$("mj-file"); f.value=""; f.onchange=async()=>{const x=f.files[0]; if(!x) return res(null); try{res(await achicar(x))}catch(e){showNotice("No se pudo usar esa foto. Probá con otra."); res(null)}}; f.click();});}
 
   function pintar(){
     const act=document.activeElement, keep=act&&act.dataset&&act.dataset.c?{i:act.dataset.c,s:act.selectionStart}:null;
@@ -1657,7 +1655,7 @@ window.initMejoras=function(db){
         <div class="mj-cf"><div class="mj-cin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.7 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg><input type="text" maxlength="500" placeholder="Escribir un comentario…" aria-label="Comentario" data-c="${esc(i)}" value="${esc(borr[i]||"")}"></div><button class="mj-b" data-a="com" data-i="${esc(i)}">Enviar</button></div></div></div>`}).join(""):'<div class="mj-vacio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></svg><b>Todavía no hay ideas</b><span>Escribí la primera arriba.</span></div>';
     if(keep){const e=document.querySelector(`#mj-lista [data-c="${CSS.escape(keep.i)}"]`); if(e){e.focus(); try{e.setSelectionRange(keep.s,keep.s)}catch(_){}}}
   }
-  function pintarPrev(){$("mj-prev").innerHTML=nuevas.map((d,k)=>`<div class="mj-ft"><img src="${d}" alt="Foto a agregar"><button type="button" class="mj-q" data-n="${k}" aria-label="Quitar foto">×</button></div>`).join(""); $("mj-fbtn").hidden=nuevas.length>=MAXF;}
+  function pintarPrev(){$("mj-prev").innerHTML=nuevas.map((d,k)=>`<div class="mj-ft"><img src="${d}" alt="Foto a agregar"><button type="button" class="mj-q" data-n="${k}" aria-label="Quitar foto">×</button></div>`).join(""); }
 
   col.onSnapshot(s=>{items={}; s.docs.forEach(d=>{const v=d.data(); if(!v||typeof v.t!=="string") return;
       const m=o=>(o&&typeof o==="object")?o:{};
@@ -1674,7 +1672,6 @@ window.initMejoras=function(db){
   tab.onclick=()=>{abrir(true); $("mj-txt").focus();};
   $("mj-cerrar").onclick=()=>abrir(false);
   document.addEventListener("keydown",e=>{if(e.key==="Escape"){const z=$("mj-zoom"); if(z) z.remove(); else if(pan.classList.contains("open")) abrir(false);}});
-  $("mj-fbtn").onclick=async()=>{const d=await elegirFoto(); if(d){nuevas.push(d); pintarPrev();}};
   // Pegar una captura o imagen copiada (Ctrl+V) dentro del formulario de arriba
   $("mj-form").addEventListener("paste",async e=>{
     const fs=[...(e.clipboardData&&e.clipboardData.files||[])].filter(f=>f.type.startsWith("image/")); if(!fs.length) return;
@@ -1696,7 +1693,6 @@ window.initMejoras=function(db){
       else if(a==="del"){ if(confirm("¿Borrar esta mejora con sus fotos y comentarios?")) await ref.delete(); }
       else if(a==="qf"){ if(confirm("¿Quitar esta foto?")) await ref.update({["fotos."+k]:FV.delete()}); }
       else if(a==="qc"){ if(confirm("¿Borrar este comentario?")) await ref.update({["coms."+k]:FV.delete()}); }
-      else if(a==="foto"){ const d=await elegirFoto(); if(d) await ref.update({["fotos."+nid("f")]:d}); }
       else if(a==="com"){ const inp=document.querySelector(`#mj-lista [data-c="${CSS.escape(i)}"]`), t=inp.value.trim(); if(!t) return;
         let n=$("mj-nom").value.trim(); if(!n){$("mj-nom").focus(); $("mj-err").textContent="Poné tu nombre para comentar."; return;} n=nombre();
         inp.value=""; delete borr[i]; await ref.update({["coms."+nid("c")]:{t:t.slice(0,500),n,f:Date.now()}}).catch(x=>{borr[i]=t; throw x;}); }
