@@ -1787,7 +1787,7 @@ window.initMinutas=function(db){
   const st=document.getElementById("stats"), mjt=$("mj-tab");
   function alinear(){const r=st.getBoundingClientRect(); if(!r.height) return;
     const h=Math.min(r.height,innerWidth<=760?150:1e9);
-    if(innerWidth>=1340){ tab.style.top=(r.top+scrollY)+"px"; tab.style.height=h+"px"; tab.style.right=(mjt&&!mjt.hidden?mjt.offsetWidth+4:0)+"px"; tab.style.borderRadius="10px"; }
+    if(innerWidth>=1340){ tab.style.top=(r.top+scrollY)+"px"; tab.style.height=h+"px"; tab.style.right=(mjt&&!mjt.hidden?mjt.offsetWidth:0)+"px"; tab.style.borderRadius="10px 0 0 10px"; }
     else { tab.style.top=(r.top+scrollY+h+8)+"px"; tab.style.height=""; tab.style.right="0"; tab.style.borderRadius="10px 0 0 10px"; }}
   tab.hidden=false; pan.hidden=false; alinear(); addEventListener("resize",alinear); addEventListener("load",alinear);
   if(window.ResizeObserver) new ResizeObserver(alinear).observe(st);
