@@ -578,6 +578,7 @@ button.tk:hover{box-shadow:0 0 0 2px var(--accent-soft),0 0 0 3px var(--accent)}
 
 <div class="wrap"><div id="plazosPanel" class="pz" hidden></div></div>
 <div class="wrap"><main id="main"></main></div>
+<div class="wrap"><section id="minutas"></section></div>
 <datalist id="people"></datalist><datalist id="lleva-list"></datalist>
 
 <!-- Capa de datos: reemplaza la base interna de Claude por Firebase Firestore (ver firebase-config.js) -->
@@ -927,8 +928,7 @@ function renderChips(){
 function renderTabs(){
   const cnt=s=>LIVE().filter(o=>!s||o.sede===s).length;
   document.getElementById("tabs").innerHTML=[["","Todas"],...SEDES.map(s=>[s,SEDE_LABEL[s]])].map(([v,l])=>
-    `<button class="tab" role="tab" data-sede="${v}" aria-selected="${state.sede===v}">${l} <em>${cnt(v)}</em></button>`).join("")
-    +`<button class="tab tab-min" role="tab" data-sede="__minutas" aria-selected="${state.sede==="__minutas"}">Minutas <em>${window.minutasCount?window.minutasCount():0}</em></button>`;
+    `<button class="tab" role="tab" data-sede="${v}" aria-selected="${state.sede===v}">${l} <em>${cnt(v)}</em></button>`).join("");
 }
 
 function renderRespFilter(){
@@ -1140,8 +1140,6 @@ function sortItems(items){
 }
 function renderList(){
   const main=document.getElementById("main");
-  const enMin=state.sede==="__minutas"; document.querySelector(".filters").hidden=enMin;
-  if(enMin){ if(window.renderMinutas) window.renderMinutas(main); return; }
   const vis=LIVE().filter(matches);
   const act=vis.filter(o=>!isSusp(o)), sus=vis.filter(isSusp);
   document.getElementById("count").textContent=`${vis.length} de ${LIVE().length} obras`;
@@ -1706,9 +1704,9 @@ window.initMejoras=function(db){
 };
 </script>
 <style>
-.tab.tab-min{border-style:dashed}
-.tab.tab-min[aria-selected="true"]{border-style:solid}
-.mn{display:grid;gap:12px;max-width:860px;padding:18px 0 40px}
+#minutas{border-top:1px solid var(--line);margin-top:28px}
+.mn-n{color:var(--muted);font-weight:600}
+.mn{display:grid;gap:12px;padding:18px 0 40px}
 .mn-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .mn-h h2{margin:0;font:700 15px var(--f-display);flex:1}
 .mn-h p{margin:2px 0 0;color:var(--muted);font-size:11.5px;flex-basis:100%}
@@ -1755,13 +1753,11 @@ window.initMejoras=function(db){
   const fecha=d=>{const [y,m,dd]=(d||"").split("-"); return y?new Date(+y,m-1,+dd).toLocaleDateString("es-AR",{day:"numeric",month:"short",year:"numeric"}):"";};
   const nid=()=>"mn"+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
   const ids=()=>Object.keys(items).sort((a,b)=>(items[b].d>items[a].d?1:items[b].d<items[a].d?-1:items[b].f-items[a].f));
-  window.minutasCount=()=>Object.keys(items).length;
-  const refrescar=()=>{renderTabs(); if(state.sede==="__minutas") renderList();};
   function obraOpts(){return '<option value="">Sin obra (general)</option>'+SEDES.map(s=>`<optgroup label="${esc(SEDE_LABEL[s])}">`+LIVE().filter(o=>o.sede===s).map(o=>`<option value="${esc(o.id)}">${esc(nom(o))}</option>`).join("")+"</optgroup>").join("");}
   const nomObra=id=>{const o=OBRAS.find(x=>x.id===id); return o?nom(o):"";};
-  window.renderMinutas=function(main){
-    if(!document.getElementById("mn-form")){ // se arma una sola vez, así no se pierde lo que se está escribiendo
-      main.innerHTML=`<section class="mn" aria-label="Minutas"><div class="mn-h"><h2>Minutas de reunión</h2><button class="mn-btn" id="mn-nueva" type="button">+ Subir minuta</button><p>Subí el PDF de cada reunión. Lo ven todos los que entran al tablero.</p></div>
+  function armar(main){
+    {
+      main.innerHTML=`<section class="mn" aria-label="Minutas"><div class="mn-h"><h2>Minutas de reunión <span class="mn-n" id="mn-n2"></span></h2><button class="mn-btn" id="mn-nueva" type="button">+ Subir minuta</button><p>Subí el PDF de cada reunión. Lo ven todos los que entran al tablero.</p></div>
       <form class="mn-form" id="mn-form" hidden>
         <div class="mn-gr"><label>Título<input type="text" id="mn-t" maxlength="150" placeholder="Ej: Reunión de obras"></label><label>Fecha de la reunión<input type="date" id="mn-d"></label></div>
         <div class="mn-gr"><label>Obra (opcional)<select id="mn-o"></select></label><label>Tu nombre<input type="text" id="mn-n" maxlength="60" placeholder="Quién la sube" autocomplete="name"></label></div>
@@ -1773,11 +1769,10 @@ window.initMejoras=function(db){
       </form><div class="mn-l" id="mn-l2"></div></section>`;
       iniciarForm();
     }
-    $("mn-form").hidden=!abierto;
     pintar();
-  };
+  }
   function pintar(){
-    const l=$("mn-l2"); if(!l) return; const k=ids();
+    const l=$("mn-l2"); if(!l) return; const k=ids(); $("mn-n2").textContent=k.length?"("+k.length+")":"";
     l.innerHTML=k.length?k.map(i=>{const x=items[i], ob=nomObra(x.obra);
       return `<div class="mn-i"><div class="mn-ico${x.pdf?"":" l"}">${x.pdf?"PDF":"LINK"}</div><div class="mn-d"><div class="mn-t">${esc(x.t)}</div><div class="mn-m">${esc(fecha(x.d))}${ob?" · "+esc(ob):""}${x.n?" · subió "+esc(x.n):""}${x.pdf?" · "+x.kb+" KB":""}</div></div>
       <div class="mn-bt"><button class="ver" data-m="ver" data-i="${esc(i)}">${x.pdf?"Ver PDF":"Abrir link"}</button><button class="bor" data-m="del" data-i="${esc(i)}">Borrar</button></div></div>`}).join("")
@@ -1809,11 +1804,11 @@ window.initMejoras=function(db){
       } else if(b.dataset.m==="del"&&confirm("¿Borrar esta minuta?")) col.doc(i).delete().catch(()=>showNotice("No se pudo borrar. Probá de nuevo."));};
   }
   window.initMinutas=function(db){
-    col=db.collection("minutas");
+    col=db.collection("minutas"); armar($("minutas"));
     col.onSnapshot(s=>{items={}; s.docs.forEach(d=>{const v=d.data(); if(!v||typeof v.t!=="string") return;
       items[d.id]={t:v.t,d:typeof v.d==="string"?v.d:"",n:typeof v.n==="string"?v.n:"",obra:typeof v.obra==="string"?v.obra:"",f:+v.f||0,
         pdf:typeof v.pdf==="string"&&v.pdf.startsWith("data:application/pdf")?v.pdf:"",kb:+v.kb||0,link:typeof v.link==="string"?v.link:""};});
-      refrescar();},()=>{});
+      pintar();},()=>{});
   };
 })();
 </script>
