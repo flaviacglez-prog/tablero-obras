@@ -927,7 +927,8 @@ function renderChips(){
 function renderTabs(){
   const cnt=s=>LIVE().filter(o=>!s||o.sede===s).length;
   document.getElementById("tabs").innerHTML=[["","Todas"],...SEDES.map(s=>[s,SEDE_LABEL[s]])].map(([v,l])=>
-    `<button class="tab" role="tab" data-sede="${v}" aria-selected="${state.sede===v}">${l} <em>${cnt(v)}</em></button>`).join("");
+    `<button class="tab" role="tab" data-sede="${v}" aria-selected="${state.sede===v}">${l} <em>${cnt(v)}</em></button>`).join("")
+    +`<button class="tab tab-min" role="tab" data-sede="__minutas" aria-selected="${state.sede==="__minutas"}">Minutas <em>${window.minutasCount?window.minutasCount():0}</em></button>`;
 }
 
 function renderRespFilter(){
@@ -1139,6 +1140,8 @@ function sortItems(items){
 }
 function renderList(){
   const main=document.getElementById("main");
+  const enMin=state.sede==="__minutas"; document.querySelector(".filters").hidden=enMin;
+  if(enMin){ if(window.renderMinutas) window.renderMinutas(main); return; }
   const vis=LIVE().filter(matches);
   const act=vis.filter(o=>!isSusp(o)), sus=vis.filter(isSusp);
   document.getElementById("count").textContent=`${vis.length} de ${LIVE().length} obras`;
@@ -1401,7 +1404,7 @@ renderAll();
     if(missing.length&&userNs&&userNs.profiles){try{const ps=await userNs.profiles(missing); missing.forEach(i=>{names[i]=(ps&&ps[i]&&ps[i].name)||""}); refreshFromStore();}catch(e){}}
   },err=>{});
   };
-  iniciar(); if(window.initMejoras) window.initMejoras(db);
+  iniciar(); if(window.initMejoras) window.initMejoras(db); if(window.initMinutas) window.initMinutas(db);
 })();
 </script>
 
@@ -1701,5 +1704,117 @@ window.initMejoras=function(db){
   $("mj-lista").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.dataset.c){e.preventDefault(); e.target.closest(".mj-cf").querySelector("[data-a=com]").click();}});
   try{ if(localStorage.getItem("mj-open")==="1" && innerWidth>760) abrir(true); }catch(e){}
 };
+</script>
+<style>
+.tab.tab-min{border-style:dashed}
+.tab.tab-min[aria-selected="true"]{border-style:solid}
+.mn{display:grid;gap:12px;max-width:860px;padding:18px 0 40px}
+.mn-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.mn-h h2{margin:0;font:700 15px var(--f-display);flex:1}
+.mn-h p{margin:2px 0 0;color:var(--muted);font-size:11.5px;flex-basis:100%}
+.mn-btn{background:var(--total-bg);color:#fff;border:0;border-radius:8px;padding:8px 14px;font:700 12px var(--f-body);cursor:pointer}
+.mn-btn:disabled{opacity:.5;cursor:default}
+.mn-g{background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:7px 12px;font:600 11.5px var(--f-body);cursor:pointer}
+.mn-form{display:grid;gap:10px;padding:14px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.mn-form[hidden]{display:none}
+.mn-gr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:640px){.mn-gr{grid-template-columns:1fr}}
+.mn-form label{display:grid;gap:4px;font:600 11px var(--f-body);color:var(--muted)}
+.mn-form input,.mn-form select{font:inherit;font-size:12.5px;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0;width:100%;box-sizing:border-box}
+.mn-form input:focus,.mn-form select:focus{outline:none;border-color:var(--total-bg)}
+.mn-or{color:var(--muted);font-size:11px;text-align:center}
+.mn-ayuda{color:var(--muted);font-size:11px;margin:0}
+.mn-err{color:var(--martin);font-size:11.5px;min-height:0}
+.mn-err:empty{display:none}
+.mn-acc{display:flex;gap:8px;justify-content:flex-end}
+.mn-l{display:grid;gap:8px}
+.mn-i{display:flex;gap:12px;align-items:center;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.mn-ico{flex:none;width:38px;height:46px;border-radius:6px;background:var(--martin-soft);color:var(--martin);display:grid;place-items:center;font:800 10px var(--f-body);letter-spacing:.04em}
+.mn-ico.l{background:var(--ot-soft);color:var(--ot)}
+.mn-d{flex:1;min-width:0;display:grid;gap:3px}
+.mn-t{font:700 13px var(--f-body);overflow-wrap:anywhere}
+.mn-m{color:var(--muted);font-size:11.5px;overflow-wrap:anywhere}
+.mn-bt{display:flex;gap:6px;flex:none;flex-wrap:wrap;justify-content:flex-end}
+.mn-bt button{border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:8px;padding:6px 11px;font:600 11.5px var(--f-body);cursor:pointer}
+.mn-bt .ver{background:var(--total-bg);color:#fff;border-color:var(--total-bg)}
+.mn-bt .bor{color:var(--martin);background:var(--martin-soft);border-color:transparent}
+.mn-vacio{display:grid;justify-items:center;gap:4px;padding:40px 0;color:var(--muted);text-align:center}
+.mn-vacio svg{width:44px;height:44px;opacity:.5}
+.mn-vacio b{color:var(--fg);font-size:13px}
+@media (max-width:640px){.mn-i{flex-wrap:wrap}.mn-bt{flex-basis:100%;justify-content:flex-start}}
+</style>
+<script>
+// Minutas: cada una es un documento de la colección "minutas" en Firestore.
+//   t (título), d (fecha aaaa-mm-dd), obra (id de la obra o ""), n (quien la subió), f (cuándo se subió),
+//   pdf (el PDF como texto "data:application/pdf;base64,…"), kb (tamaño) o link (enlace a Drive).
+// Un PDF entra hasta ~600 KB porque la base de datos no guarda archivos grandes: si pesa más, se pega el link.
+(function(){
+  const MAXKB=600; let col=null, items={}, abierto=false;
+  const $=id=>document.getElementById(id);
+  const hoy=()=>{const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
+  const fecha=d=>{const [y,m,dd]=(d||"").split("-"); return y?new Date(+y,m-1,+dd).toLocaleDateString("es-AR",{day:"numeric",month:"short",year:"numeric"}):"";};
+  const nid=()=>"mn"+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+  const ids=()=>Object.keys(items).sort((a,b)=>(items[b].d>items[a].d?1:items[b].d<items[a].d?-1:items[b].f-items[a].f));
+  window.minutasCount=()=>Object.keys(items).length;
+  const refrescar=()=>{renderTabs(); if(state.sede==="__minutas") renderList();};
+  function obraOpts(){return '<option value="">Sin obra (general)</option>'+SEDES.map(s=>`<optgroup label="${esc(SEDE_LABEL[s])}">`+LIVE().filter(o=>o.sede===s).map(o=>`<option value="${esc(o.id)}">${esc(nom(o))}</option>`).join("")+"</optgroup>").join("");}
+  const nomObra=id=>{const o=OBRAS.find(x=>x.id===id); return o?nom(o):"";};
+  window.renderMinutas=function(main){
+    if(!document.getElementById("mn-form")){ // se arma una sola vez, así no se pierde lo que se está escribiendo
+      main.innerHTML=`<section class="mn" aria-label="Minutas"><div class="mn-h"><h2>Minutas de reunión</h2><button class="mn-btn" id="mn-nueva" type="button">+ Subir minuta</button><p>Subí el PDF de cada reunión. Lo ven todos los que entran al tablero.</p></div>
+      <form class="mn-form" id="mn-form" hidden>
+        <div class="mn-gr"><label>Título<input type="text" id="mn-t" maxlength="150" placeholder="Ej: Reunión de obras"></label><label>Fecha de la reunión<input type="date" id="mn-d"></label></div>
+        <div class="mn-gr"><label>Obra (opcional)<select id="mn-o"></select></label><label>Tu nombre<input type="text" id="mn-n" maxlength="60" placeholder="Quién la sube" autocomplete="name"></label></div>
+        <label>Archivo PDF<input type="file" id="mn-f" accept="application/pdf"></label>
+        <p class="mn-ayuda">Hasta ${MAXKB} KB. Si pesa más, pegá abajo el link de Google Drive.</p>
+        <label>o link de Google Drive<input type="text" id="mn-l" maxlength="500" placeholder="https://drive.google.com/…"></label>
+        <div class="mn-err" id="mn-e" role="alert"></div>
+        <div class="mn-acc"><button class="mn-g" type="button" id="mn-c">Cancelar</button><button class="mn-btn" type="submit" id="mn-s">Subir</button></div>
+      </form><div class="mn-l" id="mn-l2"></div></section>`;
+      iniciarForm();
+    }
+    $("mn-form").hidden=!abierto;
+    pintar();
+  };
+  function pintar(){
+    const l=$("mn-l2"); if(!l) return; const k=ids();
+    l.innerHTML=k.length?k.map(i=>{const x=items[i], ob=nomObra(x.obra);
+      return `<div class="mn-i"><div class="mn-ico${x.pdf?"":" l"}">${x.pdf?"PDF":"LINK"}</div><div class="mn-d"><div class="mn-t">${esc(x.t)}</div><div class="mn-m">${esc(fecha(x.d))}${ob?" · "+esc(ob):""}${x.n?" · subió "+esc(x.n):""}${x.pdf?" · "+x.kb+" KB":""}</div></div>
+      <div class="mn-bt"><button class="ver" data-m="ver" data-i="${esc(i)}">${x.pdf?"Ver PDF":"Abrir link"}</button><button class="bor" data-m="del" data-i="${esc(i)}">Borrar</button></div></div>`}).join("")
+      :'<div class="mn-vacio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg><b>Todavía no hay minutas</b><span>Tocá "Subir minuta" para cargar la primera.</span></div>';
+  }
+  function leer(file){return new Promise((ok,mal)=>{const r=new FileReader(); r.onload=()=>ok(r.result); r.onerror=mal; r.readAsDataURL(file);});}
+  function iniciarForm(){
+    $("mn-nueva").onclick=()=>{abierto=!abierto; $("mn-form").hidden=!abierto; if(abierto){$("mn-o").innerHTML=obraOpts(); $("mn-d").value=$("mn-d").value||hoy(); try{$("mn-n").value=$("mn-n").value||localStorage.getItem("obras-firma")||""}catch(e){} $("mn-t").focus();}};
+    $("mn-c").onclick=()=>{abierto=false; $("mn-form").hidden=true; $("mn-form").reset(); $("mn-e").textContent="";};
+    $("mn-form").onsubmit=async e=>{e.preventDefault(); const er=$("mn-e"); er.textContent="";
+      const t=$("mn-t").value.trim(), d=$("mn-d").value, n=$("mn-n").value.trim(), link=$("mn-l").value.trim(), f=$("mn-f").files[0];
+      if(!t){er.textContent="Poné un título."; return;} if(!d){er.textContent="Poné la fecha de la reunión."; return;} if(!n){er.textContent="Poné tu nombre."; return;}
+      if(!f&&!link){er.textContent="Elegí el PDF o pegá un link."; return;}
+      if(f&&f.type!=="application/pdf"){er.textContent="El archivo tiene que ser un PDF."; return;}
+      if(f&&f.size>MAXKB*1024){er.textContent=`Ese PDF pesa ${Math.round(f.size/1024)} KB y el máximo es ${MAXKB} KB. Subilo a Google Drive y pegá el link.`; return;}
+      if(!f&&!/^https?:\/\//i.test(link)){er.textContent="El link tiene que empezar con https://"; return;}
+      try{localStorage.setItem("obras-firma",n)}catch(x){}
+      const b=$("mn-s"); b.disabled=true;
+      try{const doc={t,d,n,obra:$("mn-o").value,f:Date.now()}; if(f){doc.pdf=await leer(f); doc.kb=Math.round(f.size/1024);} else doc.link=link;
+        await col.doc(nid()).set(doc); $("mn-form").reset(); abierto=false; $("mn-form").hidden=true;}
+      catch(x){er.textContent="No se pudo guardar. Probá de nuevo (si sigue fallando, avisá: puede faltar publicar las reglas nuevas en Firebase).";}
+      b.disabled=false;};
+    $("mn-l2").onclick=async e=>{const b=e.target.closest("button[data-m]"); if(!b) return; const i=b.dataset.i, x=items[i]; if(!x) return;
+      if(b.dataset.m==="ver"){
+        if(x.link){window.open(x.link,"_blank","noopener"); return;}
+        try{const bin=atob(x.pdf.split(",")[1]), u=new Uint8Array(bin.length); for(let k=0;k<bin.length;k++) u[k]=bin.charCodeAt(k);
+          const url=URL.createObjectURL(new Blob([u],{type:"application/pdf"})); if(!window.open(url,"_blank")) location.href=url; setTimeout(()=>URL.revokeObjectURL(url),60000);}
+        catch(x){showNotice("No se pudo abrir el PDF.");}
+      } else if(b.dataset.m==="del"&&confirm("¿Borrar esta minuta?")) col.doc(i).delete().catch(()=>showNotice("No se pudo borrar. Probá de nuevo."));};
+  }
+  window.initMinutas=function(db){
+    col=db.collection("minutas");
+    col.onSnapshot(s=>{items={}; s.docs.forEach(d=>{const v=d.data(); if(!v||typeof v.t!=="string") return;
+      items[d.id]={t:v.t,d:typeof v.d==="string"?v.d:"",n:typeof v.n==="string"?v.n:"",obra:typeof v.obra==="string"?v.obra:"",f:+v.f||0,
+        pdf:typeof v.pdf==="string"&&v.pdf.startsWith("data:application/pdf")?v.pdf:"",kb:+v.kb||0,link:typeof v.link==="string"?v.link:""};});
+      refrescar();},()=>{});
+  };
+})();
 </script>
 </body></html>

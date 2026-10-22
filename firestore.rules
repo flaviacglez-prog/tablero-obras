@@ -46,6 +46,15 @@ service cloud.firestore {
         && request.resource.data.t.size() <= 500;
       allow delete: if esMiembro();
     }
+    // Minutas de reunión: cada una trae su PDF (como texto, hasta ~600 KB) o un link a Drive.
+    match /minutas/{id} {
+      allow read: if esMiembro();
+      allow create, update: if esMiembro()
+        && request.resource.size() < 950000
+        && request.resource.data.t is string
+        && request.resource.data.t.size() <= 150;
+      allow delete: if esMiembro();
+    }
     match /comentarios/{id} {
       allow read: if esMiembro();
       allow create: if esMiembro()
